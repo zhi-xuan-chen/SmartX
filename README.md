@@ -30,7 +30,7 @@ The zero-shot, retrieval, linear-probe, and detection implementations are scaffo
 
 ## Repository Layout
 
-- `docs/`: code availability, data availability, model zoo, model card, reproducibility notes, and remote workflow notes.
+- `docs/`: code availability, data availability, model zoo, model card, reproducibility notes, release checklist, and remote workflow notes.
 - `checkpoints/`: local checkpoint placement only; model weights are not tracked by git.
 - `demo/`: minimal reviewer-facing model usage demos and demo assets.
 - `pretrain/`: TopK vision-language pretraining code.
