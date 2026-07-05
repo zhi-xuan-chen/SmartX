@@ -1,7 +1,10 @@
 # SmartX
 
 <p align="center">
-  <img src="docs/assets/smartx_icon.png" alt="SmartX icon" width="160">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/smartx_icon.png">
+    <img src="docs/assets/smartx_icon.png" alt="SmartX icon" width="160" style="background: #ffffff; padding: 16px; border-radius: 12px;">
+  </picture>
 </p>
 
 SmartX is a clinically evaluated vision-language foundation model for generalizable multi-region X-ray interpretation. The model was pretrained on case-level radiograph-report pairs spanning ten anatomical regions and is designed to learn from the native format of radiology archives: paired studies and reports, without requiring curated image-level annotations. This repository provides the public code interface for loading SmartX, running lightweight examples, reproducing the TopK pretraining workflow, and adding downstream evaluations.
