@@ -1,38 +1,122 @@
 # SmartX
 
-SmartX is the release repository for the X-ray vision-language foundation model described in the manuscript. This repository is organized for review and reuse: model usage demos, TopK pretraining code, downstream evaluation entry points, and Nature-style code/data availability documentation.
+SmartX is a clinically evaluated vision-language foundation model for generalizable multi-region X-ray interpretation. The model was pretrained on case-level radiograph-report pairs spanning ten anatomical regions and is designed to learn from the native format of radiology archives: paired studies and reports, without requiring curated image-level annotations. This repository provides the public code interface for loading SmartX, running lightweight examples, reproducing the TopK pretraining workflow, and adding downstream evaluations.
 
-## Quick Start
+## Installation
 
-On `jhcpu7`, use the existing `vlp` conda environment for release checks:
-
-```bash
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate vlp
-python -m pytest -q
-```
-
-For a fresh external environment:
+Use Python 3.10 or newer. A conda environment named `smartx` is recommended:
 
 ```bash
+git clone <SMARTX_REPOSITORY_URL>
+cd SmartX
+conda create -n smartx python=3.10 -y
+conda activate smartx
 pip install -r requirements.txt
 ```
 
-Download model checkpoints from `docs/model_zoo.md` and place them under `checkpoints/`.
+## Model Weights
 
-```bash
-python demo/extract_features.py --help
-python demo/zero_shot.py --help
-python demo/retrieval.py --help
+Download the public checkpoint from Hugging Face or let the loader download it automatically:
+
+```text
+https://huggingface.co/Trusure/SmartX/blob/main/smartx_large.ckpt
 ```
 
-The zero-shot, retrieval, linear-probe, and detection implementations are scaffolded here and will be filled from the evaluation repository. TopK pretraining, MIL linear probe, and report-generation code are included.
+Optional local layout:
 
-## Repository Layout
+```text
+checkpoints/
+└── smartx_large.ckpt
+```
 
-- `docs/`: code availability, data availability, model zoo, model card, reproducibility notes, release checklist, and remote workflow notes.
-- `checkpoints/`: local checkpoint placement only; model weights are not tracked by git.
-- `demo/`: minimal reviewer-facing model usage demos and demo assets.
-- `pretrain/`: TopK vision-language pretraining code.
-- `downstream/`: task entry points and implementation slots for manuscript evaluations.
-- `tests/`: lightweight release sanity checks.
+See `docs/model_zoo.md` for model details.
+
+## Loading SmartX
+
+Use the shared loader in `downstream/modules/`:
+
+```python
+from downstream.modules import create_clip_style_model_global
+
+vision_model, text_model, tokenizer, model_info = create_clip_style_model_global({
+    "model_name": "smartx_large",
+    "checkpoint": "checkpoints/smartx_large.ckpt",  # optional; downloads from HF if omitted
+})
+```
+
+For the full VLP module:
+
+```python
+from downstream.modules import create_smartx_vlp_model
+
+model, tokenizer, load_report = create_smartx_vlp_model("checkpoints/smartx_large.ckpt")
+```
+
+## Demo
+
+The `demo/` directory is reserved for small reviewer-facing examples that do not require full benchmark datasets.
+
+Current planned entry points:
+
+```bash
+python demo/extract_features.py --config demo/configs/extract_features.yaml --checkpoint checkpoints/smartx_large.ckpt
+python demo/zero_shot.py --config demo/configs/zero_shot.yaml --checkpoint checkpoints/smartx_large.ckpt
+python demo/retrieval.py --config demo/configs/retrieval.yaml --checkpoint checkpoints/smartx_large.ckpt
+```
+
+The demo scripts are still listed in `docs/release_checklist.md` because they need final runnable implementations and public demo images before release.
+
+## Pretraining
+
+TopK pretraining code is under `pretrain/`.
+
+```bash
+python pretrain/run.py --config pretrain/configs/topk_ark_base.example.yaml
+```
+
+The example config uses placeholder paths. Replace them with local public or approved data paths. Do not commit private data paths.
+
+## Downstream Tasks
+
+Downstream code is organized under `downstream/`:
+
+- `downstream/modules/`: shared SmartX model-loading helpers.
+- `downstream/mil_linear_probe/`: included MIL linear-probe code.
+- `downstream/report_generation/`: included LLaVA-Rad report-generation code.
+- `downstream/zeroshot/`: pending zero-shot implementation.
+- `downstream/retrieval/`: pending image-text retrieval implementation.
+- `downstream/linear_probe/`: pending standard linear-probe implementation.
+- `downstream/detection/`: pending detection implementation.
+
+For adding the four pending tasks, follow `docs/downstream_task_guide.md`.
+
+## Tests
+
+Run the lightweight release checks with:
+
+```bash
+python -m pytest -q
+```
+
+These tests check repository structure, config templates, release checklist visibility, and lightweight utility behavior. They do not run full training or full benchmark evaluation.
+
+## Release Status
+
+Known remaining work is tracked in `docs/release_checklist.md`.
+
+Before public release, verify that:
+
+- reviewer-facing demos run on public demo assets
+- pending downstream tasks are implemented or clearly marked as unavailable
+- `CITATION.cff` and `docs/code_availability.md` metadata are filled
+- no private data, private paths, checkpoints, cached features, W&B runs, or generated results are committed
+
+## Documentation
+
+- `docs/model_zoo.md`: model files and loading notes
+- `docs/model_card.md`: intended use and limitations
+- `docs/data_availability.md`: data-sharing statement
+- `docs/code_availability.md`: code availability statement
+- `docs/reproducibility.md`: reproduction command structure
+- `docs/downstream_task_guide.md`: instructions for adding pending downstream tasks
+- `docs/release_checklist.md`: remaining work before release
