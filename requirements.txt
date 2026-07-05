@@ -1,0 +1,17 @@
+torch
+pytorch-lightning
+transformers
+huggingface_hub
+timm
+torchvision
+numpy
+pandas
+pyyaml
+pillow
+tqdm
+matplotlib
+wandb
+einops
+open_clip_torch
+pytest
+scipy

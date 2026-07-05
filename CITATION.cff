@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: SmartX
+message: If you use this software, please cite the associated manuscript.
+type: software
+authors:
+  - family-names: TBD
+    given-names: TBD
+version: 0.1.0
+repository-code: TBD

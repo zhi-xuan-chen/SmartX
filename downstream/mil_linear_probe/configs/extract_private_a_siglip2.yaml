@@ -1,0 +1,16 @@
+# Model Architecture
+model_name: "siglip2"
+img_size: 224
+in_channels: 3
+
+# HuggingFace SigLIP2 Vision Model ID
+# 如需替换为其它 SigLIP/SigLIP2 变体，可修改该字段
+hf_siglip_model_id: "google/siglip2-so400m-patch16-naflex"
+
+# Dataset
+dataset_name: "private_a"
+
+# Feature Extraction Settings
+batch_size: 32
+num_workers: 16
+

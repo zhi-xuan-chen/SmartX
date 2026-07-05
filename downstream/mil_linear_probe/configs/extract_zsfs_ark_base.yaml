@@ -1,0 +1,12 @@
+# Model Architecture
+model_name: "ark_base"
+img_size: 224
+in_channels: 3
+
+# Dataset
+dataset_name: "zsfs"
+
+# Feature Extraction Settings
+batch_size: 64
+num_workers: 16
+

@@ -1,0 +1,19 @@
+# Model Architecture
+model_name: "our_siglip2"
+img_size: 224
+in_channels: 3
+
+# Our SigLIP2 checkpoint（必须由用户指定）
+# 例如: "${SMARTX_OUTPUT_ROOT}/topk_siglip2_last.ckpt"
+pretrained_path: "${SMARTX_DATA_ROOT}/pretrained_weights/topk_v100_best.ckpt"
+
+# 对应的 HuggingFace SigLIP2 模型 ID（用于构建骨架）
+hf_siglip_model_id: "google/siglip2-so400m-patch16-naflex"
+
+# Dataset
+dataset_name: "private_a"
+
+# Feature Extraction Settings
+batch_size: 32
+num_workers: 16
+

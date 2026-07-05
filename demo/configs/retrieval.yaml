@@ -1,0 +1,5 @@
+checkpoint: checkpoints/smartx_large.ckpt
+pairs_path: demo/assets/retrieval_pairs.jsonl
+batch_size: 4
+img_size: 224
+metrics: [recall@1, recall@5, recall@10, median_rank]

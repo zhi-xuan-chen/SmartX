@@ -1,0 +1,7 @@
+{
+  "labels": [
+    {"name": "normal", "prompts": ["an X-ray with no acute abnormality"]},
+    {"name": "pneumonia", "prompts": ["an X-ray showing pneumonia"]},
+    {"name": "fracture", "prompts": ["an X-ray showing a bone fracture"]}
+  ]
+}

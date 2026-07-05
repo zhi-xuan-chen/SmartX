@@ -1,0 +1,29 @@
+dataset_name: private_a
+
+# MIL 设置（统一使用 per-class attention 的 CLAM）
+mil_type: clam
+clam_size: big
+clam_gate: true
+dropout: 0.25
+attn_hidden_dim: 256
+attn_heads: 1
+
+# 训练超参
+lr: 1e-3
+weight_decay: 1e-4
+max_epochs: 50
+batch_size: 4096
+warmup_epochs: 5
+gradient_clip_val: 1.0
+
+# 数据相关
+img_size: 768
+in_channels: 3
+max_views: 6
+num_workers: 8
+
+# 特征加载
+preload_features: true
+
+# 随机种子
+seed: 42

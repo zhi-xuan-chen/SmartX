@@ -1,0 +1,15 @@
+# Model Architecture
+model_name: "rad_dino"
+img_size: 518
+in_channels: 3
+
+# Pretrained Model Path (not needed, model has no pretrained weights)
+# pretrained_path: ""
+
+# Dataset
+dataset_name: "ncfy"
+
+# Feature Extraction Settings
+batch_size: 48
+num_workers: 16
+

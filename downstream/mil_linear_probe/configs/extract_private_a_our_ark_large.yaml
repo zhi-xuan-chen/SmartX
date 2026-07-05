@@ -1,0 +1,18 @@
+# Model Architecture
+model_name: "our_ark_large"
+img_size: 768
+in_channels: 3
+
+# Pretrained Model Path
+#
+# 注意：our_ark_large 在 `create_vision_encoder` 里会强制要求该字段存在，
+# 所以这里需要直接写死具体 ckpt 路径。
+pretrained_path: "${SMARTX_DATA_ROOT}/pretrained_weights/topk_v14_last.ckpt"
+
+# Dataset
+dataset_name: "private_a"
+
+# Feature Extraction Settings
+batch_size: 32
+num_workers: 16
+

@@ -216,3 +216,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# SmartX release artifacts
+checkpoints/*
+!checkpoints/README.md
+experiments/
+results/
+analysis_results/
+features/
+wandb/
+outputs/
+demo/outputs/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.bin
+*.pkl
+*.pickle
+*.jsonl.tmp
+*.csv.tmp
+.DS_Store

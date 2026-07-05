@@ -1,0 +1,18 @@
+# Model Architecture
+model_name: "our_ark_base"
+img_size: 224
+in_channels: 3
+
+# Pretrained Model Path (required for our_ark_base)
+pretrained_path: "${SMARTX_DATA_ROOT}/pretrained_weights/topk_v95_last.ckpt"
+
+# Dataset
+dataset_name: "zsfy"
+
+# Feature Extraction Settings
+batch_size: 64
+num_workers: 16
+
+
+# 预处理方案：pad-to-square + resize（letterbox），model_id 自动追加 _lp 后缀
+preprocess: "lp"
