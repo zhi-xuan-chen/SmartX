@@ -1,12 +1,11 @@
 # Zero-Shot Classification
 
-Status: pending implementation. Add this task following [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md).
+This folder provides public SmartX zero-shot classification adapted from the evaluation repository. It uses positive and negative text prompts per class, encodes images and prompts with [`downstream.modules.create_clip_style_model_global()`](../modules/README.md), and writes metrics plus per-sample scores to a user-selected output directory.
 
-Minimum files expected here:
+```bash
+python downstream/zeroshot/run_zeroshot.py --config downstream/zeroshot/configs/zeroshot.example.yaml
+```
 
-- `run_zeroshot.py`
-- `configs/zeroshot.example.yaml`
-- `metrics.py` only if task-specific metrics are needed
-- `datasets.py` only if task-specific dataset parsing is needed
+The manifest should contain an image column and either a label column or one label column per class. Paths, class names, prompts, split, batch size, checkpoint, and output directory are all configured in YAML.
 
-Use `downstream.modules.create_clip_style_model_global()` for SmartX checkpoint loading. Do not add private data, checkpoints, generated outputs, W&B runs, or machine-specific paths.
+See [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md) for the release conventions. Do not commit dataset manifests, labels, generated predictions, cached features, checkpoints, or machine-specific paths.

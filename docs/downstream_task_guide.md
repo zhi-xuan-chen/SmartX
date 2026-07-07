@@ -1,6 +1,6 @@
 # Downstream Task Guide
 
-This guide is for adding the four pending downstream tasks:
+This guide defines the public release conventions for the downstream tasks:
 
 - `downstream/zeroshot/`
 - `downstream/retrieval/`
@@ -20,7 +20,7 @@ vision_model, text_model, tokenizer, model_info = create_clip_style_model_global
 
 ## Required Shape
 
-Each task should add only the files needed to run and understand that task:
+Each task should keep only the files needed to run and understand that task:
 
 ```text
 downstream/<task>/
@@ -28,10 +28,10 @@ downstream/<task>/
 ├── configs/
 │   └── <task>.example.yaml
 ├── run_<task>.py
-└── metrics.py        # only if the task has task-specific metrics
+└── metrics.py        # only if the task has its own metrics
 ```
 
-If the task needs dataset code, add `datasets.py`. If it needs feature caching, add `extract_features.py`. Do not add extra framework folders until there is real code that uses them.
+If the task needs dataset code, add `datasets.py`. If it needs feature caching, add `extract_features.py`. Framework folders should contain only code used by the release entry points.
 
 ## Required Behavior
 
@@ -47,9 +47,9 @@ Do not commit:
 
 - private images, reports, labels, splits, or reader-study data
 - generated predictions, metrics tables, plots, cached features, W&B runs, or checkpoints
-- machine-specific paths such as `/jhcnas...`, `/project...`, or `/home/<user>...`
+- private or machine-local absolute paths
 
-## Task-Specific Minimums
+## Per-Task Minimums
 
 ### Zero-Shot
 

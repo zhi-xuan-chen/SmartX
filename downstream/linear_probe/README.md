@@ -1,12 +1,20 @@
 # Linear Probe
 
-Status: pending implementation. Add this task following [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md).
+This folder provides the public SmartX linear-probe workflow adapted from the evaluation repository. It uses [`downstream.modules.create_clip_style_model_global()`](../modules/README.md) for checkpoint loading and keeps dataset paths in user config files.
 
-Minimum files expected here:
+## Entry Points
 
-- `train_linear_probe.py / extract_features.py`
-- `configs/linear_probe.example.yaml`
-- `metrics.py` only if task-specific metrics are needed
-- `datasets.py` only if task-specific dataset parsing is needed
+```bash
+python downstream/linear_probe/extract_features.py --config downstream/linear_probe/configs/linear_probe.example.yaml
+python downstream/linear_probe/train_linear_probe.py --config downstream/linear_probe/configs/linear_probe.example.yaml
+python downstream/linear_probe/test_linear_probe.py --config downstream/linear_probe/configs/linear_probe.example.yaml --checkpoint outputs/linear_probe/run/linear_probe_best.pt
+```
 
-Use `downstream.modules.create_clip_style_model_global()` for SmartX checkpoint loading. Do not add private data, checkpoints, generated outputs, W&B runs, or machine-specific paths.
+Feature extraction writes the release cache format:
+
+- `{split}_features.pt`
+- `{split}_labels.pt`
+- `{split}_samples.json`
+- `metadata.json`
+
+See [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md) for the release conventions. Do not commit manifests, cached features, checkpoints, generated outputs, or machine-specific paths.

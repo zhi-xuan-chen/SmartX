@@ -10,12 +10,12 @@ This file tracks the remaining work before SmartX is ready for public review or 
   - Add small public, openly licensed, or synthetic/de-identified X-ray demo images under `demo/assets/images/`.
   - Keep demo outputs outside git-tracked files.
 
-- [ ] Implement the four pending downstream tasks.
-  - `downstream/zeroshot/`
-  - `downstream/retrieval/`
-  - `downstream/linear_probe/`
-  - `downstream/detection/`
-  - Follow `docs/downstream_task_guide.md`.
+- [x] Add public downstream task entry points.
+  - `downstream/zeroshot/` uses SmartX prompt-based zero-shot evaluation.
+  - `downstream/retrieval/` uses generic image-text case manifests and Recall@K metrics.
+  - `downstream/linear_probe/` uses cached SmartX feature extraction, training, and testing.
+  - `downstream/detection/` uses SmartX-backed VitDet with user-provided COCO annotations.
+  - All four use `downstream.modules.create_clip_style_model_global()` or the same public SmartX checkpoint resolver.
 
 - [ ] Trim `downstream/mil_linear_probe/` for release clarity.
   - Keep core train/test/data-schema code.
@@ -39,7 +39,7 @@ python -m compileall -q docs demo downstream pretrain tests utils checkpoints
 python -m pytest -q
 find . -type d \( -name '__pycache__' -o -name '.pytest_cache' -o -name 'wandb' -o -name 'analysis_results' -o -name 'results' \) -print
 find . -type f -size +1M -print
-rg -n "(/jhcnas|/project|/home/chenzhixuan|/home/kyle|/data/kyle|/ssddata2|api_key|password|secret|sk-)" .
+python -m pytest tests/test_downstream_release_tasks.py::test_downstream_release_hygiene -q
 rg -n "TBD|NotImplemented|Implementation pending|scaffold" README.md CITATION.cff docs demo downstream pretrain tests utils
 ```
 

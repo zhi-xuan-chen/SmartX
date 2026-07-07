@@ -1,0 +1,28 @@
+model:
+  name: smartx_large
+  checkpoint: ${SMARTX_CHECKPOINT}
+  repo_id: Trusure/SmartX
+  filename: smartx_large.ckpt
+
+dataset:
+  name: public_xray_retrieval
+  split: test
+  manifest: ${SMARTX_DATA_ROOT}/retrieval/cases.jsonl
+  image_root: ${SMARTX_DATA_ROOT}/images
+  image_column: image_paths
+  text_column: report_text
+  case_column: case_uid
+  verify_images: false
+  max_cases: 0
+  subset_seed: 0
+
+evaluation:
+  output_dir: outputs/retrieval
+  image_size: 768
+  in_channels: 3
+  batch_size: 16
+  num_workers: 4
+  aggregation: mean
+  recall_k: [1, 5, 10, 50, 100]
+  top_k: 5
+  write_per_case: true

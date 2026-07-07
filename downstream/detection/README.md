@@ -1,12 +1,22 @@
 # Detection
 
-Status: pending implementation. Add this task following [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md).
+This folder provides a public SmartX-backed VitDet workflow adapted from the evaluation repository. It preserves the Detectron2/LazyConfig training structure while requiring users to provide COCO annotations, image roots, checkpoint path, and output directory in YAML.
 
-Minimum files expected here:
+```bash
+python downstream/detection/train_detection.py train --config downstream/detection/configs/detection.example.yaml
+python downstream/detection/train_detection.py test --config downstream/detection/configs/detection.example.yaml --checkpoint outputs/detection/public_xray_detection/model_best.pth
+```
 
-- `run_detection.py or train_detection.py`
-- `configs/detection.example.yaml`
-- `metrics.py` only if task-specific metrics are needed
-- `datasets.py` only if task-specific dataset parsing is needed
+The detector uses the SmartX Swin-L backbone. If `model.checkpoint` is empty, the backbone resolves the public SmartX checkpoint through [`downstream.modules.create_clip_style_model_global()`](../modules/README.md) and the shared Hugging Face defaults.
 
-Use `downstream.modules.create_clip_style_model_global()` for SmartX checkpoint loading. Do not add private data, checkpoints, generated outputs, W&B runs, or machine-specific paths.
+## Optional Dependencies
+
+Detection dependencies are intentionally not forced into the base install. Install them separately for this task:
+
+```bash
+pip install -r downstream/detection/requirements-optional.txt
+```
+
+Detectron2 installation can be platform-specific; follow the official Detectron2 instructions if the package index wheel is not available for your CUDA/PyTorch combination.
+
+See [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md) for the release conventions. Do not commit COCO annotations, dataset images, generated outputs, checkpoints, or machine-specific paths.

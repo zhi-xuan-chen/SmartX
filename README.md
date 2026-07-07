@@ -90,12 +90,12 @@ Downstream code is organized under `downstream/`:
 - `downstream/modules/`: shared SmartX model-loading helpers.
 - `downstream/mil_linear_probe/`: included MIL linear-probe code.
 - `downstream/report_generation/`: included LLaVA-Rad report-generation code.
-- `downstream/zeroshot/`: pending zero-shot implementation.
-- `downstream/retrieval/`: pending image-text retrieval implementation.
-- `downstream/linear_probe/`: pending standard linear-probe implementation.
-- `downstream/detection/`: pending detection implementation.
+- `downstream/zeroshot/`: prompt-based zero-shot classification.
+- `downstream/retrieval/`: image-text retrieval with public manifest inputs.
+- `downstream/linear_probe/`: cached-feature extraction, training, and evaluation.
+- `downstream/detection/`: SmartX-backed VitDet training/evaluation for COCO-format annotations.
 
-For adding the four pending tasks, follow `docs/downstream_task_guide.md`.
+For downstream release conventions, follow `docs/downstream_task_guide.md`.
 
 ## Tests
 
@@ -114,7 +114,7 @@ Known remaining work is tracked in `docs/release_checklist.md`.
 Before public release, verify that:
 
 - reviewer-facing demos run on public demo assets
-- pending downstream tasks are implemented or clearly marked as unavailable
+- downstream tasks use public configs and no private data paths
 - `CITATION.cff` and `docs/code_availability.md` metadata are filled
 - no private data, private paths, checkpoints, cached features, W&B runs, or generated results are committed
 
@@ -125,5 +125,5 @@ Before public release, verify that:
 - `docs/data_availability.md`: data-sharing statement
 - `docs/code_availability.md`: code availability statement
 - `docs/reproducibility.md`: reproduction command structure
-- `docs/downstream_task_guide.md`: instructions for adding pending downstream tasks
+- `docs/downstream_task_guide.md`: downstream task release conventions
 - `docs/release_checklist.md`: remaining work before release

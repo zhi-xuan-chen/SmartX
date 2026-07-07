@@ -1,0 +1,40 @@
+dataset:
+  name: public_xray_detection
+  num_classes: 1
+  class_names:
+    - finding
+  train_split: train
+  val_split: val
+  test_split: test
+  splits:
+    train:
+      annotation: ${SMARTX_DATA_ROOT}/detection/annotations_train.json
+      image_root: ${SMARTX_DATA_ROOT}/detection/images_train
+    val:
+      annotation: ${SMARTX_DATA_ROOT}/detection/annotations_val.json
+      image_root: ${SMARTX_DATA_ROOT}/detection/images_val
+    test:
+      annotation: ${SMARTX_DATA_ROOT}/detection/annotations_test.json
+      image_root: ${SMARTX_DATA_ROOT}/detection/images_test
+
+model:
+  backbone: smartx_large
+  checkpoint: ${SMARTX_CHECKPOINT}
+  repo_id: Trusure/SmartX
+  filename: smartx_large.ckpt
+  freeze_backbone: false
+  image_size: 768
+  resize_mode: stretch
+  lazy_config: downstream/detection/configs/vitdet_xray_base.py
+
+training:
+  output_dir: outputs/detection/public_xray_detection
+  batch_size: 2
+  max_iter: 10000
+  eval_period: 1000
+  checkpoint_period: 1000
+  log_period: 50
+  max_to_keep: 2
+  num_workers: 4
+  lr: 0.0001
+  amp: true

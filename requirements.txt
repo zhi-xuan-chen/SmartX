@@ -4,6 +4,7 @@ transformers
 huggingface_hub
 timm
 torchvision
+torchmetrics
 numpy
 pandas
 pyyaml
@@ -13,6 +14,10 @@ matplotlib
 wandb
 einops
 open_clip_torch
+pydicom
+SimpleITK
+tensorboard
 pytest
 scipy
 scikit-learn
+statsmodels
