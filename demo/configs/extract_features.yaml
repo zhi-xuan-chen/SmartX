@@ -1,5 +1,0 @@
-checkpoint: checkpoints/smartx_large.ckpt
-image_dir: demo/assets/images
-output_path: demo/outputs/features.pt
-batch_size: 4
-img_size: 224

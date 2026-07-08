@@ -4,10 +4,10 @@ This file tracks the remaining work before SmartX is ready for public review or 
 
 ## High Priority
 
-- [ ] Make `demo/` runnable.
-  - Replace `NotImplementedError` in `demo/extract_features.py`, `demo/zero_shot.py`, and `demo/retrieval.py`.
-  - Use `downstream.modules.create_clip_style_model_global()` for model loading.
-  - Add small public, openly licensed, or synthetic/de-identified X-ray demo images under `demo/assets/images/`.
+- [x] Make `demo/` runnable.
+  - `demo/smartx_demo.ipynb` runs zero-shot classification and image–text retrieval on the
+    pretrained weights via `downstream.modules.create_clip_style_model_global()`.
+  - Public-domain X-ray demo images under `demo/assets/images/` (see `demo/assets/README.md`).
   - Keep demo outputs outside git-tracked files.
 
 - [x] Add public downstream task entry points.

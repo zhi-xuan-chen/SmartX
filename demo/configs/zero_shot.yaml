@@ -1,5 +1,0 @@
-checkpoint: checkpoints/smartx_large.ckpt
-image_dir: demo/assets/images
-labels_path: demo/assets/zero_shot_labels.json
-batch_size: 4
-img_size: 224

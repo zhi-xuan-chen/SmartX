@@ -9,7 +9,10 @@ import torch.nn.functional as F
 from .pos_embed import get_2d_sincos_pos_embed
 from .text_model import create_text_encoder
 from .vision_model import create_vision_encoder
-from utils import print_rank_zero
+try:  # works when repo root is on sys.path (downstream/demo)
+    from pretrain.utils import print_rank_zero
+except ModuleNotFoundError:  # works when pretrain/ is the import root (training)
+    from utils import print_rank_zero
 
 class XRayTopKVLP(torch.nn.Module):
     def __init__(

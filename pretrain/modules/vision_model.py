@@ -22,7 +22,10 @@ except Exception:
     Siglip2VisionModel = None
     AutoImageProcessor = None
 
-from utils.utils import print_rank_zero
+try:  # works when repo root is on sys.path (downstream/demo)
+    from pretrain.utils.utils import print_rank_zero
+except ModuleNotFoundError:  # works when pretrain/ is the import root (training)
+    from utils.utils import print_rank_zero
 
 
 class VisionTransformer(timm.models.vision_transformer.VisionTransformer):

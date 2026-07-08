@@ -2,10 +2,12 @@
 
 This directory is for small reviewer-facing demos that run without full benchmark datasets.
 
-Planned entry points:
+## Notebook
 
-- `extract_features.py`: load a checkpoint and export image embeddings for demo images.
-- `zero_shot.py`: run prompt-based zero-shot classification on demo X-rays.
-- `retrieval.py`: run image-text retrieval on demo image/report pairs.
+- `smartx_demo.ipynb`: end-to-end **zero-shot classification** and **image–text retrieval**
+  on a handful of public-domain chest X-rays (`assets/images/`), using the pretrained
+  weights only — no training. Requires a local checkpoint at
+  `checkpoints/smartx_large.ckpt` (set `CHECKPOINT = None` in the notebook to auto-download
+  from Hugging Face `Trusure/SmartX`). Runs on CPU or GPU.
 
-The zero-shot and retrieval implementations depend on downstream code that will be added from the evaluation repository.
+For full-dataset evaluation, see `downstream/zeroshot/` and `downstream/retrieval/`.

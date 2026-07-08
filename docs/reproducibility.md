@@ -25,10 +25,13 @@ python run.py --config configs/topk_ark_base.example.yaml --smoke_test
 ## Demos
 
 ```bash
-python demo/extract_features.py --config demo/configs/extract_features.yaml --checkpoint checkpoints/smartx_large.ckpt
-python demo/zero_shot.py --config demo/configs/zero_shot.yaml --checkpoint checkpoints/smartx_large.ckpt
-python demo/retrieval.py --config demo/configs/retrieval.yaml --checkpoint checkpoints/smartx_large.ckpt
+jupyter notebook demo/smartx_demo.ipynb
 ```
+
+Runs zero-shot classification and image–text retrieval on public-domain demo X-rays using
+the pretrained weights only (no training). Place the checkpoint at
+`checkpoints/smartx_large.ckpt`, or set `CHECKPOINT = None` in the notebook to auto-download
+from Hugging Face `Trusure/SmartX`.
 
 ## Downstream Evaluations
 

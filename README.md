@@ -63,15 +63,13 @@ model, tokenizer, load_report = create_smartx_vlp_model("checkpoints/smartx_larg
 
 The `demo/` directory is reserved for small reviewer-facing examples that do not require full benchmark datasets.
 
-Current planned entry points:
+Run the demo notebook (zero-shot classification + image–text retrieval on public-domain X-rays, using the pretrained weights only):
 
 ```bash
-python demo/extract_features.py --config demo/configs/extract_features.yaml --checkpoint checkpoints/smartx_large.ckpt
-python demo/zero_shot.py --config demo/configs/zero_shot.yaml --checkpoint checkpoints/smartx_large.ckpt
-python demo/retrieval.py --config demo/configs/retrieval.yaml --checkpoint checkpoints/smartx_large.ckpt
+jupyter notebook demo/smartx_demo.ipynb
 ```
 
-The demo scripts are still listed in `docs/release_checklist.md` because they need final runnable implementations and public demo images before release.
+Place the SmartX checkpoint at `checkpoints/smartx_large.ckpt`, or set `CHECKPOINT = None` in the notebook to auto-download from Hugging Face `Trusure/SmartX`.
 
 ## Pretraining
 
