@@ -8,6 +8,7 @@ def test_yaml_templates_load():
     for path in [
         "pretrain/configs/topk_ark_base.example.yaml",
         "downstream/linear_probe/configs/linear_probe.example.yaml",
+        "downstream/mil_linear_probe/configs/mil_linear_probe.example.yaml",
         "downstream/zeroshot/configs/zeroshot.example.yaml",
         "downstream/retrieval/configs/retrieval.example.yaml",
         "downstream/detection/configs/detection.example.yaml",

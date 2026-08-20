@@ -6,6 +6,7 @@ This guide defines the public release conventions for the downstream tasks:
 - `downstream/retrieval/`
 - `downstream/linear_probe/`
 - `downstream/detection/`
+- `downstream/mil_linear_probe/`
 
 Use the shared SmartX loader instead of writing a new checkpoint loader:
 
@@ -81,6 +82,19 @@ Add:
 - `metrics.py`: classification metrics used by the manuscript task.
 
 Smoke check: train for one epoch on tiny synthetic/demo features committed as small text/JSON/NPY only if license-safe and non-private.
+
+### Case-level MIL Linear Probe
+
+Add:
+
+- `extract_features.py`: export padded case-level SmartX embeddings and view masks.
+- `train_mil_linear_probe.py`: train the manuscript CLAM-style attention head.
+- `test_mil_linear_probe.py`: evaluate with validation-derived thresholds.
+- `configs/mil_linear_probe.example.yaml`: generic case manifests and output settings.
+
+Smoke check: train, save, reload and evaluate on tiny synthetic feature bags.
+Keep private cohort schemas, region-specific wrappers and analysis outputs out
+of the release repository.
 
 ### Detection
 
