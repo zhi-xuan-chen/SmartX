@@ -27,6 +27,15 @@ from downstream.linear_probe.data import (
 )
 
 
+def _validate_binary_labels(labels, context: str) -> torch.Tensor:
+    tensor = torch.as_tensor(labels, dtype=torch.float32)
+    if not torch.isfinite(tensor).all():
+        raise ValueError(f"{context} has a non-finite label")
+    if not torch.all((tensor == 0) | (tensor == 1)):
+        raise ValueError(f"{context} has a label outside {{0, 1}}")
+    return tensor
+
+
 @dataclass(frozen=True)
 class MILSample:
     case_uid: str
@@ -75,6 +84,17 @@ class MILManifestDataset(Dataset):
         image_col = image_column or pick_column(frame.columns, ("image_paths", *IMAGE_COLUMNS))
         if image_col is None:
             raise ValueError(f"No image column found in {self.manifest_path}")
+        if label_columns is not None and not label_columns:
+            raise ValueError("dataset.label_columns must not be empty")
+        if (
+            label_columns is not None
+            and self.class_names
+            and len(label_columns) != len(self.class_names)
+        ):
+            raise ValueError(
+                "dataset.label_columns and dataset.class_names must have the same "
+                "length"
+            )
         if label_columns is not None:
             missing = [column for column in label_columns if column not in frame.columns]
             if missing:
@@ -86,6 +106,9 @@ class MILManifestDataset(Dataset):
 
         id_col = pick_column(frame.columns, ID_COLUMNS)
         samples: list[MILSample] = []
+        expected_labels = 1 if task_type == "binary" else len(
+            label_columns or self.class_names
+        ) or None
         for idx, row in frame.iterrows():
             image_paths = parse_image_paths(row[image_col], self.image_root)[: self.max_views]
             if not image_paths:
@@ -100,6 +123,15 @@ class MILManifestDataset(Dataset):
                     class_names=self.class_names,
                     num_classes=len(self.class_names) or None,
                     task_type=task_type,
+                )
+            label_tensor = _validate_binary_labels(
+                label, f"Case {row[id_col] if id_col else idx}"
+            ).reshape(-1)
+            if expected_labels is None:
+                expected_labels = len(label_tensor)
+            if len(label_tensor) != expected_labels:
+                raise ValueError(
+                    f"Expected {expected_labels} labels, got {len(label_tensor)}"
                 )
             samples.append(
                 MILSample(
@@ -180,10 +212,22 @@ def load_cached_split(features_dir: str | Path, split: str):
     features = torch.load(paths["features"], map_location="cpu")
     masks = torch.load(paths["masks"], map_location="cpu").bool()
     labels = torch.load(paths["labels"], map_location="cpu").float()
+    _validate_binary_labels(labels, f"Cached MIL split '{key}'")
     sample_ids = json.loads(paths["samples"].read_text(encoding="utf-8"))
     if not (len(features) == len(masks) == len(labels) == len(sample_ids)):
         raise ValueError(f"Cached MIL split '{key}' has inconsistent lengths")
     return features, masks, labels, [str(item) for item in sample_ids]
+
+
+def resolve_class_names(
+    class_names: Sequence[str] | None, num_classes: int
+) -> list[str]:
+    names = [str(name) for name in class_names or []]
+    if not names:
+        return [f"class_{idx}" for idx in range(num_classes)]
+    if len(names) != num_classes:
+        raise ValueError(f"Expected {num_classes} class names, got {len(names)}")
+    return names
 
 
 def make_cached_loader(
@@ -206,6 +250,7 @@ __all__ = [
     "build_manifest_dataset",
     "load_cached_split",
     "load_yaml_config",
+    "resolve_class_names",
     "make_cached_loader",
     "resolve_path",
     "write_json",

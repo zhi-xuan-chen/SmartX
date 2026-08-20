@@ -32,8 +32,10 @@ python downstream/mil_linear_probe/test_mil_linear_probe.py --config downstream/
 
 Feature extraction writes padded case tensors and validity masks for each
 split. Training selects the best checkpoint by validation macro AUROC and
-stores validation-derived per-class thresholds in that checkpoint. Test F1
-and MCC use those fixed validation thresholds rather than test-set thresholds.
+stores validation-derived per-class thresholds in that checkpoint. MIL heads
+use the manuscript training schedule: five warm-up epochs, cosine learning-rate
+decay and gradient clipping at 1. Test F1, MCC and balanced accuracy use those
+fixed validation thresholds rather than test-set thresholds.
 
 Outputs include cached features, `train_history.json`, `summary.json`,
 `metrics.json`, per-case predictions and optional attention weights.

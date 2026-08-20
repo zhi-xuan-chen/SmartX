@@ -3,7 +3,12 @@
 from __future__ import annotations
 
 import numpy as np
-from sklearn.metrics import f1_score, matthews_corrcoef, roc_curve
+from sklearn.metrics import (
+    balanced_accuracy_score,
+    f1_score,
+    matthews_corrcoef,
+    roc_curve,
+)
 
 from downstream.linear_probe.metrics import compute_classification_metrics
 
@@ -45,14 +50,23 @@ def compute_mil_metrics(labels, scores, thresholds=None) -> dict[str, object]:
     valid = [idx for idx in range(labels.shape[1]) if len(np.unique(labels[:, idx])) == 2]
     f1_per_class = [f1_score(labels[:, idx], predictions[:, idx], zero_division=0) for idx in valid]
     mcc_per_class = [matthews_corrcoef(labels[:, idx], predictions[:, idx]) for idx in valid]
+    balanced_accuracy_per_class = [
+        balanced_accuracy_score(labels[:, idx], predictions[:, idx]) for idx in valid
+    ]
     result.update(
         {
             "accuracy": float(np.mean(predictions == labels)),
             "subset_accuracy": float(np.mean(np.all(predictions == labels, axis=1))),
             "f1_macro": float(np.mean(f1_per_class)) if f1_per_class else None,
             "mcc_macro": float(np.mean(mcc_per_class)) if mcc_per_class else None,
+            "balanced_accuracy_macro": (
+                float(np.mean(balanced_accuracy_per_class))
+                if balanced_accuracy_per_class
+                else None
+            ),
             "f1_per_class": f1_per_class,
             "mcc_per_class": mcc_per_class,
+            "balanced_accuracy_per_class": balanced_accuracy_per_class,
             "thresholds": thresholds.tolist(),
         }
     )

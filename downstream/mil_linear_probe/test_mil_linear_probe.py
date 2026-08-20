@@ -18,6 +18,7 @@ from downstream.mil_linear_probe.data import (
     load_cached_split,
     load_yaml_config,
     make_cached_loader,
+    resolve_class_names,
     resolve_path,
     write_json,
 )
@@ -56,6 +57,9 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    class_names = resolve_class_names(
+        checkpoint.get("class_names"), checkpoint["model_config"]["num_classes"]
+    )
     model = CLAMLinearProbe(**checkpoint["model_config"])
     model.load_state_dict(checkpoint["model_state_dict"])
     split = args.split or eval_cfg.get("split", "test")
@@ -93,9 +97,6 @@ def main() -> None:
             "metrics": metrics,
         },
     )
-    class_names = checkpoint.get("class_names") or [
-        f"class_{idx}" for idx in range(scores.shape[1])
-    ]
     rows = {"case_uid": sample_ids}
     predictions = scores >= thresholds[None, :]
     for idx, class_name in enumerate(class_names):

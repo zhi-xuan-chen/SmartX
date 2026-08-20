@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from downstream.mil_linear_probe.data import (
     load_cached_split,
     load_yaml_config,
     make_cached_loader,
+    resolve_class_names,
     resolve_path,
     write_json,
 )
@@ -92,7 +94,7 @@ def main() -> None:
         train_labels = train_labels[:, None]
         valid_labels = valid_labels[:, None]
 
-    batch_size = int(args.batch_size or training_cfg.get("batch_size", 32))
+    batch_size = int(args.batch_size or training_cfg.get("batch_size", 4096))
     train_loader = make_cached_loader(
         train_features, train_masks, train_labels, batch_size=batch_size, shuffle=True
     )
@@ -110,19 +112,46 @@ def main() -> None:
         num_classes=int(train_labels.shape[-1]),
     )
     model = CLAMLinearProbe(**resolved_model_cfg).to(device)
+    decay_params, no_decay_params = [], []
+    for name, parameter in model.named_parameters():
+        (no_decay_params if name.endswith(".bias") else decay_params).append(parameter)
     optimizer = torch.optim.AdamW(
-        model.parameters(),
+        [
+            {
+                "params": decay_params,
+                "weight_decay": float(training_cfg.get("weight_decay", 0.0001)),
+            },
+            {"params": no_decay_params, "weight_decay": 0.0},
+        ],
         lr=float(args.lr or training_cfg.get("lr", 0.001)),
-        weight_decay=float(training_cfg.get("weight_decay", 0.0001)),
+        betas=(0.9, 0.95),
+        eps=1e-8,
     )
     criterion = nn.BCEWithLogitsLoss()
     max_epochs = int(args.max_epochs or training_cfg.get("max_epochs", 50))
+    warmup_epochs = int(training_cfg.get("warmup_epochs", 5))
+    if max_epochs < 1 or warmup_epochs < 0:
+        raise ValueError("Require max_epochs >= 1 and warmup_epochs >= 0")
+    total_steps = len(train_loader) * max_epochs
+    warmup_steps = len(train_loader) * warmup_epochs
+
+    def lr_lambda(step: int) -> float:
+        if step < warmup_steps:
+            return float(step) / max(1, warmup_steps)
+        progress = float(step - warmup_steps) / max(1, total_steps - warmup_steps)
+        return 0.5 * (1.0 + math.cos(math.pi * progress))
+
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
+    gradient_clip_val = float(training_cfg.get("gradient_clip_val", 1.0))
 
     best_metric = -float("inf")
     best_path = output_dir / "mil_linear_probe_best.pt"
     history = []
     metadata_path = features_dir / "metadata.json"
     metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {}
+    class_names = resolve_class_names(
+        metadata.get("class_names"), resolved_model_cfg["num_classes"]
+    )
 
     for epoch in range(max_epochs):
         model.train()
@@ -135,7 +164,10 @@ def main() -> None:
             logits, _ = model(features, masks)
             loss = criterion(logits, labels)
             loss.backward()
+            if gradient_clip_val > 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clip_val)
             optimizer.step()
+            scheduler.step()
             running_loss += float(loss.detach().cpu()) * len(features)
 
         valid_y, valid_scores = _predict(model, valid_loader, device)
@@ -154,7 +186,7 @@ def main() -> None:
                 {
                     "model_state_dict": model.state_dict(),
                     "model_config": resolved_model_cfg,
-                    "class_names": metadata.get("class_names", []),
+                    "class_names": class_names,
                     "thresholds": thresholds.tolist(),
                     "training_config": training_cfg,
                     "metadata": metadata,
