@@ -24,9 +24,11 @@ This file tracks the remaining work before SmartX is ready for public review or 
 
 ## Metadata Before Submission
 
-- [ ] Fill `CITATION.cff` author and repository fields.
-- [ ] Fill `docs/code_availability.md` public repository, release tag, and archived DOI.
-- [ ] Confirm `docs/model_zoo.md` matches the final Hugging Face files.
+- [x] Fill `CITATION.cff` author and repository fields.
+- [x] Fill the public repository in `docs/code_availability.md`.
+- [ ] Create a release tag and record it in `docs/code_availability.md`.
+- [ ] Archive the release and record its DOI in `docs/code_availability.md`.
+- [x] Confirm `docs/model_zoo.md` matches the final Hugging Face files.
 
 ## Final Audit
 

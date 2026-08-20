@@ -35,4 +35,4 @@ from Hugging Face `Trusure/SmartX`.
 
 ## Downstream Evaluations
 
-Downstream task directories provide the expected structure. Zero-shot, retrieval, linear-probe, and detection code will be added from the evaluation repository.
+Runnable configs and entry points are provided for zero-shot classification, image--text retrieval, linear probing, and detection. See each task directory under `downstream/`; detection additionally requires the optional dependencies listed in `downstream/detection/requirements-optional.txt`.

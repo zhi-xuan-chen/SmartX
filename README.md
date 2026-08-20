@@ -14,7 +14,7 @@ SmartX is a clinically evaluated vision-language foundation model for generaliza
 Use Python 3.10 or newer. A conda environment named `smartx` is recommended:
 
 ```bash
-git clone <SMARTX_REPOSITORY_URL>
+git clone https://github.com/zhi-xuan-chen/SmartX.git
 cd SmartX
 conda create -n smartx python=3.10 -y
 conda activate smartx
@@ -113,7 +113,7 @@ Before public release, verify that:
 
 - reviewer-facing demos run on public demo assets
 - downstream tasks use public configs and no private data paths
-- `CITATION.cff` and `docs/code_availability.md` metadata are filled
+- a release tag and archived DOI are recorded before publication
 - no private data, private paths, checkpoints, cached features, W&B runs, or generated results are committed
 
 ## Documentation

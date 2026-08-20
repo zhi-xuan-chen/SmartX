@@ -3,7 +3,47 @@ title: SmartX
 message: If you use this software, please cite the associated manuscript.
 type: software
 authors:
-  - family-names: TBD
-    given-names: TBD
+  - family-names: Chen
+    given-names: Zhixuan
+  - family-names: Son
+    given-names: Moo Hyun
+  - family-names: Huang
+    given-names: Weihong
+  - family-names: He
+    given-names: Sunan
+  - family-names: Bie
+    given-names: Yequan
+  - family-names: Hou
+    given-names: Junlin
+  - family-names: Wang
+    given-names: Yihui
+  - family-names: Qiu
+    given-names: Zelin
+  - family-names: Nie
+    given-names: Yuxiang
+  - family-names: Yang
+    given-names: Shu
+  - family-names: Wu
+    given-names: Lin
+  - family-names: Chen
+    given-names: Linglong
+  - family-names: Li
+    given-names: Bin
+  - family-names: Ye
+    given-names: Qiang
+  - family-names: Zhang
+    given-names: Rui
+  - family-names: Bi
+    given-names: Zheng
+  - family-names: Li
+    given-names: Tao
+  - family-names: Zhang
+    given-names: Zhiruo
+  - family-names: Zhu
+    given-names: Yanyan
+  - family-names: Zhao
+    given-names: Yinghua
+  - family-names: Chen
+    given-names: Hao
 version: 0.1.0
-repository-code: TBD
+repository-code: https://github.com/zhi-xuan-chen/SmartX
