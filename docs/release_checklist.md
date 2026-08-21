@@ -15,11 +15,12 @@ This file tracks the remaining work before SmartX is ready for public review or 
   - `downstream/retrieval/` uses generic image-text case manifests and Recall@K metrics.
   - `downstream/linear_probe/` uses cached SmartX feature extraction, training, and testing.
   - `downstream/detection/` uses SmartX-backed VitDet with user-provided COCO annotations.
-  - All four use `downstream.modules.create_clip_style_model_global()` or the same public SmartX checkpoint resolver.
+  - `downstream/mil_linear_probe/` uses generic case manifests and a CLAM-style attention head.
+  - All five use `downstream.modules.create_clip_style_model_global()` or the same public SmartX checkpoint resolver.
 
-- [ ] Trim `downstream/mil_linear_probe/` for release clarity.
-  - Keep core train/test/data-schema code.
-  - Remove or archive internal batch scripts, reader-study scripts, and analysis-output defaults that reviewers cannot run.
+- [x] Trim `downstream/mil_linear_probe/` for release clarity.
+  - Keep only the generic manifest, feature extraction, CLAM train/test, config, and documentation.
+  - Removed internal cohort adapters, batch scripts, reader-study helpers, and analysis code.
   - Do not add private data, private splits, cached features, checkpoints, W&B runs, or generated results.
 
 ## Metadata Before Submission

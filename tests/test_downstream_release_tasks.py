@@ -11,6 +11,9 @@ def test_downstream_import_smoke():
         "downstream.linear_probe.data",
         "downstream.linear_probe.metrics",
         "downstream.linear_probe.model",
+        "downstream.mil_linear_probe.data",
+        "downstream.mil_linear_probe.metrics",
+        "downstream.mil_linear_probe.model",
         "downstream.zeroshot.data",
         "downstream.zeroshot.metrics",
         "downstream.retrieval.datasets",
@@ -66,6 +69,7 @@ def test_downstream_release_hygiene():
     root = Path(__file__).resolve().parents[1]
     task_roots = [
         root / "downstream/linear_probe",
+        root / "downstream/mil_linear_probe",
         root / "downstream/zeroshot",
         root / "downstream/retrieval",
         root / "downstream/detection",
