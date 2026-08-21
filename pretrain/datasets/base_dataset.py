@@ -32,8 +32,6 @@ def load_image_with_dynamic_range(path, in_chans=1):
         arr = np.stack([arr] * 3, axis=-1)
     elif arr.ndim == 3 and arr.shape[2] == 1 and in_chans == 3:
         arr = np.repeat(arr, 3, axis=-1)
-    elif arr.ndim == 2 and in_chans == 1:
-        arr = arr[..., None]
 
     pil_img = Image.fromarray((arr * 255).astype(np.uint8))
     if in_chans == 3:
@@ -63,6 +61,7 @@ class BaseDataset(Dataset):
         expand_samples=False,
     ):  
         self.expand_samples = expand_samples
+        self.mask_generator = None
         if mask_generator:
             self.mask_generator = MaskGenerator(
                 input_size=img_size,
@@ -187,14 +186,15 @@ class BaseDataset(Dataset):
             try:
                 image = load_image_with_dynamic_range(image_path, in_chans=self.in_channels)
             except Exception as e:
-                print(f"Error loading image {image_path}: {e}")
-                return self[idx + 1]
+                raise RuntimeError(f"Could not load image {image_path}") from e
             image = self.transform(image)
-            return {
+            sample = {
                 "image": image,
                 "image_path": image_path,
-                "mask": self.mask_generator(),
             }
+            if self.mask_generator is not None:
+                sample["mask"] = self.mask_generator()
+            return sample
 
     def _is_valid_text(self, value):
         """

@@ -42,28 +42,6 @@ class CheXpertDataset(BaseDataset):
         self.data_list = self.data_list[self.data_list["split"] == self.split]
         if self.text:
             self._filter_invalid_text_rows()
-    
-    def _filter_invalid_text_rows(self):
-        """
-        重写过滤方法，检查 findings_section 或 impression_section 是否有效
-        """
-        if not getattr(self, "text", False):
-            return
-        if not hasattr(self, "data_list") or self.data_list is None:
-            return
-        
-        # 检查 findings_section 或 impression_section 是否至少有一个有效
-        def has_valid_text(row):
-            findings = row.get("findings_section", "")
-            impression = row.get("impression_section", "")
-            return (findings and self._is_valid_text(findings)) or (impression and self._is_valid_text(impression))
-        
-        self.data_list = (
-            self.data_list[
-                self.data_list.apply(has_valid_text, axis=1)
-            ]
-            .reset_index(drop=True)
-        )
         img_dir_1024 = os.path.join(self.data_dir, "imgs-1024")
         self.base_img_dir = img_dir_1024 if os.path.isdir(img_dir_1024) else os.path.join(self.data_dir, "imgs-512")
         self._rows_image_paths = [
@@ -89,6 +67,28 @@ class CheXpertDataset(BaseDataset):
             print_rank_zero(
                 f"{self.split.upper()} CheXpert: {len(self._rows_image_paths):,} Studies"
             )
+
+    def _filter_invalid_text_rows(self):
+        """
+        重写过滤方法，检查 findings_section 或 impression_section 是否有效
+        """
+        if not getattr(self, "text", False):
+            return
+        if not hasattr(self, "data_list") or self.data_list is None:
+            return
+
+        # 检查 findings_section 或 impression_section 是否至少有一个有效
+        def has_valid_text(row):
+            findings = row.get("findings_section", "")
+            impression = row.get("impression_section", "")
+            return (findings and self._is_valid_text(findings)) or (impression and self._is_valid_text(impression))
+
+        self.data_list = (
+            self.data_list[
+                self.data_list.apply(has_valid_text, axis=1)
+            ]
+            .reset_index(drop=True)
+        )
 
     def _get_report_from_row(self, row):
         """
