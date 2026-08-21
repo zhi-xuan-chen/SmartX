@@ -12,6 +12,7 @@ VIS_ENCODER_CONFIG = {
     "ark_large":    {"vis_dim": 1536, "input_size": 768, "channels": 3, "num_tokens": 576},   # patch only
     "our_ark_base": {"vis_dim": 1024, "input_size": 224, "channels": 3, "num_tokens": 49},    # patch only
     "our_ark_large":{"vis_dim": 1536, "input_size": 768, "channels": 3, "num_tokens": 576},   # patch only
+    "smartx_large": {"vis_dim": 1536, "input_size": 768, "channels": 3, "num_tokens": 576},
     "chess":        {"vis_dim": 2048, "input_size": 512, "channels": 1, "num_tokens": 256},   # patch only
     "biomedclip":   {"vis_dim": 768,  "input_size": 224, "channels": 3, "num_tokens": 196},   # ViT-B/16 patch only
     "conceptclip":  {"vis_dim": 1152, "input_size": 384, "channels": 3, "num_tokens": 729},   # ViT-SO400M-14 patch only
@@ -235,7 +236,7 @@ def create_vision_encoder(cfg):
         }
         missing, unexpected = encoder.load_state_dict(state_dict, strict=False)
 
-    elif model_name.lower() == "our_ark_large":
+    elif model_name.lower() in {"our_ark_large", "smartx_large"}:
         from timm.models.swin_transformer import SwinTransformer
 
         encoder = SwinTransformer(
@@ -248,9 +249,9 @@ def create_vision_encoder(cfg):
         )
         encoder.head = Identity()
 
-        if cfg.get("pretrained_path", None) is None:
-            raise ValueError("pretrained_path must be specified for our_ark_large model")
-        pretrained_path = cfg["pretrained_path"]
+        from downstream.modules import resolve_smartx_checkpoint
+
+        pretrained_path = resolve_smartx_checkpoint(cfg.get("pretrained_path"))
         print(f"Loading pretrained weights from {pretrained_path}")
         weight = torch.load(
             pretrained_path, 
@@ -263,7 +264,7 @@ def create_vision_encoder(cfg):
             for k, v in state_dict.items()
             if ("vision_encoder" in k)
         }
-        missing, unexpected = encoder.load_state_dict(state_dict, strict=False)
+        missing, unexpected = encoder.load_state_dict(state_dict, strict=True)
 
     # ResNet50
     elif model_name.lower() == "chess":
@@ -484,7 +485,7 @@ def extract_conceptclip_features(encoder, images):
 def get_extract_features_fn(model_name):
     model_name_lower = model_name.lower()
 
-    if model_name_lower in ["ark_base", "ark_large", "our_ark_base", "our_ark_large"]:
+    if model_name_lower in ["ark_base", "ark_large", "our_ark_base", "our_ark_large", "smartx_large"]:
         return extract_swin_features
     elif model_name_lower == "gloria":
         return extract_gloria_features

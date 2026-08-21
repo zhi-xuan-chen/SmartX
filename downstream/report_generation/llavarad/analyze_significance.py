@@ -23,9 +23,9 @@ Output:
 
 Usage example:
   python analyze_significance.py \
-      --jsonls topk_v109:preds_topk_v109.jsonl,chess:preds_chess.jsonl,\
+      --jsonls smartx_large:preds_smartx_large.jsonl,chess:preds_chess.jsonl,\
 biomedclip:preds_biomedclip.jsonl \
-      --reference_model topk_v109 \
+      --reference_model smartx_large \
       --output_dir analysis_results
 """
 

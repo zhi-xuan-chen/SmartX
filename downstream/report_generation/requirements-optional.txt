@@ -1,0 +1,9 @@
+accelerate
+deepspeed
+evaluate
+fire
+f1radgraph
+peft
+rouge-score
+sacrebleu
+sentencepiece

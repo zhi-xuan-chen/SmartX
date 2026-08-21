@@ -181,7 +181,11 @@ def data_loader_mimic_reason_findings(data_path, split):
             reference = row.get("reference") or row.get("findings") or ""
             if not isinstance(reference, str):
                 reference = str(reference)
-            if isinstance(image, str) and image.startswith("mimic/"):
+            image = image.strip() if isinstance(image, str) else ""
+            reference = reference.strip()
+            if not image or not reference:
+                continue
+            if image.startswith("mimic/"):
                 image = image[len("mimic/"):]
             if isinstance(image, str) and "/files/" in image:
                 image = image.split("/files/", 1)[1]
@@ -222,10 +226,16 @@ def data_loader_mimic_reason_findings(data_path, split):
     return ret
 
 
-def _load_iu_image_map():
+def _load_iu_image_map(data_path):
     """Build {uid: filename} from indiana_projections.csv (source of truth for filenames)."""
-    import os
-    iu_root = "${SMARTX_DATA_ROOT}/IUXray"
+    iu_root = os.environ.get("IU_ROOT")
+    if not iu_root:
+        data_root = os.environ.get("SMARTX_DATA_ROOT")
+        iu_root = (
+            os.path.join(data_root, "IUXray")
+            if data_root
+            else os.path.dirname(os.path.dirname(os.path.abspath(data_path)))
+        )
     img_map = {}  # uid -> filename (prefer Frontal)
     try:
         with open(os.path.join(iu_root, "indiana_projections.csv"), newline="", encoding="utf-8") as f:
@@ -250,7 +260,7 @@ def data_loader_iu_findings(data_path):
     Uses indiana_projections.csv as the source of truth for filename mapping.
     """
     logging.info("using the IU X-Ray loader.")
-    img_map = _load_iu_image_map()
+    img_map = _load_iu_image_map(data_path)
 
     with open(data_path, newline="", encoding="utf-8") as f:
         raw_rows = list(csv.DictReader(f))
@@ -307,77 +317,6 @@ def data_loader_iu_findings(data_path):
     return ret
 
 
-def data_loader_chexpert_findings(data_path, split):
-    """Loader for CheXpert-Plus grouped CSV (chexpert_processed_grouped.csv).
-
-    Mirrors the pre-training data convention (pretrain/datasets/CheXpert.py):
-    rows are filtered by the `split` column (train / validate); the report
-    target is findings_section, falling back to impression_section when
-    findings is empty (so rows are kept rather than dropped). The frontal view
-    is picked as the single input image. The returned `image` is relative to
-    --image_folder (e.g. CheXpert-Plus/imgs-1024), matching MIMIC/IU loaders.
-    """
-    import ast
-    logging.info(f"using the CheXpert-Plus loader: split={split}.")
-
-    # report/findings fields contain embedded newlines -> large CSV cells.
-    csv.field_size_limit(10 ** 9)
-
-    def valid_text(v):
-        if v is None:
-            return False
-        return str(v).strip().lower() not in ("", "nan", "none", "null", "n/a", "-")
-
-    def parse_paths(cell):
-        if not cell:
-            return []
-        s = str(cell).strip()
-        if s.startswith("[") and s.endswith("]"):
-            try:
-                return list(ast.literal_eval(s))
-            except Exception:
-                try:
-                    return json.loads(s.replace("'", '"'))
-                except Exception:
-                    return []
-        return [s]
-
-    def pick_frontal(paths):
-        for p in paths:
-            if "frontal" in str(p).lower():
-                return str(p).strip().lstrip("/")
-        return str(paths[0]).strip().lstrip("/") if paths else ""
-
-    with open(data_path, newline="", encoding="utf-8") as f:
-        raw_rows = [row for row in csv.DictReader(f) if (row.get("split") or "") == split]
-
-    ret = []
-    for idx, row in enumerate(raw_rows):
-        # findings preferred; fall back to impression when findings is empty.
-        if valid_text(row.get("findings_section")):
-            report, section = str(row["findings_section"]).strip(), "findings"
-        elif valid_text(row.get("impression_section")):
-            report, section = str(row["impression_section"]).strip(), "impression"
-        else:
-            continue
-        image = pick_frontal(parse_paths(row.get("image_paths", "")))
-        if not image or "frontal" not in image.lower():
-            continue
-        sample_id = row.get("id") or row.get("StudyId") or idx
-        ret.append({
-            "id": sample_id,
-            "image": image,
-            "section": section,
-            "conversations": [
-                {"from": "human", "value": "<image>\nProvide a description of the findings in the radiology image."},
-                {"from": "gpt", "value": report},
-            ],
-        })
-
-    logging.info(f"loaded {len(ret)}/{len(raw_rows)} samples.")
-    return ret
-
-
 data_loaders = {
     "default": data_loader_default,
     "mimic_train_findings": lambda x: data_loader_mimic_reason_findings(x, "train"),
@@ -386,6 +325,4 @@ data_loaders = {
     "mimic_cxr_all_views_findings": data_loader_mimic_cxr_all_views_findings,
     "iu_train_findings": data_loader_iu_findings,
     "iu_test_findings": data_loader_iu_findings,
-    "chexpert_train_findings": lambda x: data_loader_chexpert_findings(x, "train"),
-    "chexpert_test_findings": lambda x: data_loader_chexpert_findings(x, "validate"),
 }

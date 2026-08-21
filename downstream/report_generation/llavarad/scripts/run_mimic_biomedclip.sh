@@ -1,18 +1,22 @@
 #!/bin/bash
-set -e
-set -o pipefail
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
+export PYTHONPATH="${REPO_ROOT}:${PROJECT_ROOT}:${PYTHONPATH:-}"
 MODEL="biomedclip"
 PRETRAINED_DEFAULT=""
 STAGE1_BATCH_SIZE_DEFAULT="24"
 STAGE2_BATCH_SIZE_DEFAULT="12"
 EVAL_BATCH_SIZE_DEFAULT="2"
 
+SMARTX_OUTPUT_ROOT="${SMARTX_OUTPUT_ROOT:-${REPO_ROOT}/outputs/report_generation}"
+export SMARTX_OUTPUT_ROOT
+
 mode="${1:-all}"
 llavarad_merged="${2:-${SMARTX_OUTPUT_ROOT}/llavarad_merged}"
-checkpoint_root="${CHECKPOINT_ROOT:-${SMARTX_OUTPUT_ROOT}/XRay-VLP/experiments/RG/mimic_llavarad}"
+checkpoint_root="${CHECKPOINT_ROOT:-${SMARTX_OUTPUT_ROOT}/mimic}"
 
 if [[ "${mode}" == "all" ]]; then
     bash "$0" stage1 "${llavarad_merged}" "${3:-${PRETRAINED_DEFAULT}}" "${4:-${STAGE1_BATCH_SIZE_DEFAULT}}"

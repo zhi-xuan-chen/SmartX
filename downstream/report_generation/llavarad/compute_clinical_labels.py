@@ -25,7 +25,7 @@ already wired up in your ``rrg_eval`` env (same prerequisites as
 Example::
 
     python compute_clinical_labels.py \\
-        --jsonls topk_v109:preds_topk_v109_ar.jsonl,\\
+        --jsonls smartx_large:preds_smartx_large.jsonl,\\
 chess:preds_chess.jsonl,\\
 biomedclip:preds_biomedclip.jsonl \\
         --output_dir analysis_results/v_stat \\
