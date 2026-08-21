@@ -1,23 +1,36 @@
 #!/bin/bash
 # Stage 1: train mm_projector only (LLM + vision encoder frozen) on IU X-Ray
-# Usage: bash scripts/train_stage1_custom_iu.sh [llavarad_merged] [encoder_name] [pretrained_path(only for our*)] [output_dir] [train_batch_size]
+# Usage: bash scripts/train_stage1_custom_iu.sh [llavarad_merged] [encoder_name] [pretrained_path] [output_dir] [train_batch_size]
 # Supported custom vision encoder names:
 #   ark_base | ark_large | our_ark_base | our_ark_large | rad_dino | gloria | chexzero | chess | biomedclip | conceptclip | maco
 
-set -e
-set -o pipefail
+set -euo pipefail
 
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export CUDA_VISIBLE_DEVICES
 
+: "${SMARTX_DATA_ROOT:?Set SMARTX_DATA_ROOT to the report-generation data root}"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
+SMARTX_OUTPUT_ROOT="${SMARTX_OUTPUT_ROOT:-${REPO_ROOT}/outputs/report_generation}"
+
 llavarad_merged="${1:-${SMARTX_OUTPUT_ROOT}/llavarad_merged}"
-custom_vision_encoder="${2:-gloria}"
-custom_vision_pretrained_path="${3:-${SMARTX_DATA_ROOT}/pretrained_weights/our_ark_base.pth}"
-output_dir="${4:-${SMARTX_OUTPUT_ROOT}/XRay-VLP/experiments/RG/iu_llavarad/llavarad_${custom_vision_encoder}_stage1}"
+custom_vision_encoder="${2:-smartx_large}"
+custom_vision_pretrained_path="${3:-}"
+output_dir="${4:-${SMARTX_OUTPUT_ROOT}/iu/llavarad_${custom_vision_encoder}_stage1}"
 train_batch_size="${5:-48}"
 
 data_path=${SMARTX_DATA_ROOT}/IUXray/labels/indiana_meta_frontal_findings_w_chexbert_labels_train.csv
 image_folder=${SMARTX_DATA_ROOT}/IUXray/images/images_normalized
+
+[[ -d "${llavarad_merged}" ]] || { echo "Missing merged LLaVA-Rad model: ${llavarad_merged}" >&2; exit 1; }
+[[ -f "${data_path}" ]] || { echo "Missing training manifest: ${data_path}" >&2; exit 1; }
+[[ -d "${image_folder}" ]] || { echo "Missing image directory: ${image_folder}" >&2; exit 1; }
+if [[ -n "${custom_vision_pretrained_path}" && ! -f "${custom_vision_pretrained_path}" ]]; then
+    echo "Missing vision checkpoint: ${custom_vision_pretrained_path}" >&2
+    exit 1
+fi
 
 IFS=',' read -ra GPU_IDS <<< "${CUDA_VISIBLE_DEVICES}"
 NUM_GPUS=${#GPU_IDS[@]}
@@ -25,11 +38,10 @@ MASTER_ADDR="${MASTER_ADDR:-127.0.0.1}"
 MASTER_PORT="${MASTER_PORT:-$(shuf -i 20000-65000 -n 1)}"
 
 # Ensure local llava package is imported instead of any site-packages llava.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-export PYTHONPATH="${PROJECT_ROOT}:${PYTHONPATH}"
+export PYTHONPATH="${PROJECT_ROOT}:${PYTHONPATH:-}"
 
-mkdir -p ${output_dir}
+mkdir -p "${output_dir}"
 
 ARGS=(
     --model_name_or_path "${llavarad_merged}"
@@ -60,11 +72,11 @@ ARGS=(
     --model_max_length 2048
     --gradient_checkpointing True
     --dataloader_num_workers 4
-    --report_to wandb
+    --report_to "${REPORT_TO:-none}"
     --run_name "llavarad_${custom_vision_encoder}_stage1_iu"
 )
 
-if [[ "${custom_vision_encoder}" == our_* ]]; then
+if [[ -n "${custom_vision_pretrained_path}" ]]; then
     ARGS+=(--custom_vision_pretrained_path "${custom_vision_pretrained_path}")
 fi
 

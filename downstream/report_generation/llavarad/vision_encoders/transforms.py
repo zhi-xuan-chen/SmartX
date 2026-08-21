@@ -18,6 +18,7 @@ _NORM_MAP = {
     "ark_large": "ark_large",
     "our_ark_base": "our_ark_base",
     "our_ark_large": "our_ark_large",
+    "smartx_large": "our_ark_large",
     "biomedclip": "chexzero",
     "conceptclip": "chexzero",
 }
@@ -95,7 +96,7 @@ def get_custom_image_transform(model_name: str):
 
     cfg = VIS_ENCODER_CONFIG[model_name]
     # Preserve aspect ratio + center crop for our_* models
-    preserve_aspect = model_name.startswith("our_")
+    preserve_aspect = model_name.startswith("our_") or model_name == "smartx_large"
     return get_transforms(
         img_size=cfg["input_size"],
         in_channels=cfg["channels"],

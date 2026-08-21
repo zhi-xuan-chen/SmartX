@@ -7,6 +7,7 @@ This guide defines the public release conventions for the downstream tasks:
 - `downstream/linear_probe/`
 - `downstream/detection/`
 - `downstream/mil_linear_probe/`
+- `downstream/report_generation/`
 
 Use the shared SmartX loader instead of writing a new checkpoint loader:
 
@@ -32,7 +33,7 @@ downstream/<task>/
 └── metrics.py        # only if the task has its own metrics
 ```
 
-If the task needs dataset code, add `datasets.py`. If it needs feature caching, add `extract_features.py`. Framework folders should contain only code used by the release entry points.
+If the task needs dataset code, add `datasets.py`. If it needs feature caching, add `extract_features.py`. Framework-native shell entry points are acceptable for distributed training tasks such as report generation; do not add an unused YAML layer. Framework folders should contain only code used by the release entry points.
 
 ## Required Behavior
 
@@ -105,6 +106,18 @@ Add:
 - `metrics.py`: mAP/IoU helpers only if not supplied by the detection framework.
 
 Smoke check: parse a tiny public/demo annotation file and run one forward/eval pass. Do not commit full detection datasets.
+
+### Report Generation
+
+Keep the adapted LLaVA-Rad framework, two SmartX entry points for MIMIC-CXR
+and IU X-Ray, and only the baseline wrappers used by the manuscript. Resolve
+the SmartX checkpoint through the shared public loader. Training must keep W&B
+optional; evaluation must use an explicitly selected checkpoint rather than
+selecting one on test metrics.
+
+Smoke check: validate both public CSV loaders, shell syntax, manuscript
+hyperparameters and SmartX encoder loading. Full Vicuna 7B training is not a
+CI requirement.
 
 ## Tests
 
