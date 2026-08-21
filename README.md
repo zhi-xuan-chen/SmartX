@@ -3,125 +3,152 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/smartx_icon.png">
-    <img src="docs/assets/smartx_icon.png" alt="SmartX icon" width="160" style="background: #ffffff; padding: 16px; border-radius: 12px;">
+    <img src="docs/assets/smartx_icon.png" alt="SmartX" width="160">
   </picture>
 </p>
 
-SmartX is a clinically evaluated vision-language foundation model for generalizable multi-region X-ray interpretation. The model was pretrained on case-level radiograph-report pairs spanning ten anatomical regions and is designed to learn from the native format of radiology archives: paired studies and reports, without requiring curated image-level annotations. This repository provides the public code interface for loading SmartX, running lightweight examples, reproducing the TopK pretraining workflow, and adding downstream evaluations.
+<p align="center">
+  <strong>A clinically evaluated vision-language foundation model for generalizable multi-region X-ray interpretation</strong>
+</p>
 
-## Installation
+<p align="center">
+  <a href="https://github.com/zhi-xuan-chen/SmartX/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/zhi-xuan-chen/SmartX/actions/workflows/tests.yml/badge.svg"></a>
+  <img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white">
+  <a href="https://github.com/zhi-xuan-chen/SmartX/blob/main/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
+  <a href="https://huggingface.co/Trusure/SmartX"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Model_Weights-yellow"></a>
+</p>
 
-Use Python 3.10 or newer. A conda environment named `smartx` is recommended:
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#demo">Demo</a> ·
+  <a href="#downstream-tasks">Downstream tasks</a> ·
+  <a href="#documentation">Documentation</a>
+</p>
+
+SmartX learns from case-level radiograph-report pairs across ten anatomical
+regions, matching the native structure of radiology archives without requiring
+curated image-level annotations. This repository provides model loading,
+pretraining, reviewer-facing demos, and public implementations of six downstream
+evaluation tasks.
+
+## Quick start
+
+SmartX requires Python 3.10 or newer.
 
 ```bash
 git clone https://github.com/zhi-xuan-chen/SmartX.git
 cd SmartX
 conda create -n smartx python=3.10 -y
 conda activate smartx
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-## Model Weights
+### Model weights
 
-Download the public checkpoint from Hugging Face or let the loader download it automatically:
+| Model | Vision backbone | Checkpoint |
+| --- | --- | --- |
+| SmartX-Large | ARK ViT-L | [`smartx_large.ckpt`](https://huggingface.co/Trusure/SmartX/resolve/main/smartx_large.ckpt) |
 
-```text
-https://huggingface.co/Trusure/SmartX/blob/main/smartx_large.ckpt
-```
-
-Optional local layout:
-
-```text
-checkpoints/
-└── smartx_large.ckpt
-```
-
-See `docs/model_zoo.md` for model details.
-
-## Loading SmartX
-
-Use the shared loader in `downstream/modules/`:
+The shared loader downloads the checkpoint from
+[`Trusure/SmartX`](https://huggingface.co/Trusure/SmartX) automatically when
+`checkpoint` is omitted. To use a local copy, place it at
+`checkpoints/smartx_large.ckpt`.
 
 ```python
 from downstream.modules import create_clip_style_model_global
 
 vision_model, text_model, tokenizer, model_info = create_clip_style_model_global({
     "model_name": "smartx_large",
-    "checkpoint": "checkpoints/smartx_large.ckpt",  # optional; downloads from HF if omitted
+    # "checkpoint": "checkpoints/smartx_large.ckpt",  # optional
 })
 ```
 
-For the full VLP module:
+To load the full VLP module:
 
 ```python
 from downstream.modules import create_smartx_vlp_model
 
-model, tokenizer, load_report = create_smartx_vlp_model("checkpoints/smartx_large.ckpt")
+model, tokenizer, load_report = create_smartx_vlp_model(
+    "checkpoints/smartx_large.ckpt"
+)
 ```
+
+See the [model zoo](docs/model_zoo.md) and [model card](docs/model_card.md) for
+model details, intended use, and limitations.
 
 ## Demo
 
-The `demo/` directory is reserved for small reviewer-facing examples that do not require full benchmark datasets.
-
-Run the demo notebook (zero-shot classification + image–text retrieval on public-domain X-rays, using the pretrained weights only):
+The [SmartX demo notebook](demo/smartx_demo.ipynb) runs zero-shot classification
+and image-text retrieval on public-domain X-rays using pretrained weights only.
+It supports CPU and GPU execution.
 
 ```bash
+python -m pip install notebook
 jupyter notebook demo/smartx_demo.ipynb
 ```
 
-Place the SmartX checkpoint at `checkpoints/smartx_large.ckpt`, or set `CHECKPOINT = None` in the notebook to auto-download from Hugging Face `Trusure/SmartX`.
+Place the checkpoint at `checkpoints/smartx_large.ckpt`, or set
+`CHECKPOINT = None` in the notebook to download it automatically.
+
+## Downstream tasks
+
+| Task | Public implementation |
+| --- | --- |
+| Zero-shot classification | [Prompt-based evaluation](downstream/zeroshot/README.md) |
+| Image-text retrieval | [Embedding extraction and retrieval metrics](downstream/retrieval/README.md) |
+| Linear probe | [Feature extraction, training, and evaluation](downstream/linear_probe/README.md) |
+| MIL linear probe | [Study-level multiple-instance learning](downstream/mil_linear_probe/README.md) |
+| Object detection | [SmartX-backed VitDet with COCO-format annotations](downstream/detection/README.md) |
+| Report generation | [LLaVA-Rad training and evaluation](downstream/report_generation/README.md) |
+
+All tasks use the [shared SmartX loaders](downstream/modules/README.md).
+Dataset-agnostic interfaces and release conventions are documented in the
+[downstream task guide](docs/downstream_task_guide.md).
 
 ## Pretraining
 
-TopK pretraining code is under `pretrain/`.
+TopK pretraining code and an example configuration are available under
+[`pretrain/`](pretrain/).
 
 ```bash
 python pretrain/run.py --config pretrain/configs/topk_ark_base.example.yaml
 ```
 
-The example config uses placeholder paths. Replace them with local public or approved data paths. Do not commit private data paths.
-
-## Downstream Tasks
-
-Downstream code is organized under `downstream/`:
-
-- `downstream/modules/`: shared SmartX model-loading helpers.
-- `downstream/mil_linear_probe/`: included MIL linear-probe code.
-- `downstream/report_generation/`: included LLaVA-Rad report-generation code.
-- `downstream/zeroshot/`: prompt-based zero-shot classification.
-- `downstream/retrieval/`: image-text retrieval with public manifest inputs.
-- `downstream/linear_probe/`: cached-feature extraction, training, and evaluation.
-- `downstream/detection/`: SmartX-backed VitDet training/evaluation for COCO-format annotations.
-
-For downstream release conventions, follow `docs/downstream_task_guide.md`.
+The example configuration contains placeholder paths. Replace them with local
+public or approved data paths; never commit private data paths.
 
 ## Tests
 
-Run the lightweight release checks with:
+Run the lightweight release checks:
 
 ```bash
 python -m pytest -q
 ```
 
-These tests check repository structure, config templates, release checklist visibility, and lightweight utility behavior. They do not run full training or full benchmark evaluation.
-
-## Release Status
-
-Known remaining work is tracked in `docs/release_checklist.md`.
-
-Before public release, verify that:
-
-- reviewer-facing demos run on public demo assets
-- downstream tasks use public configs and no private data paths
-- a release tag and archived DOI are recorded before publication
-- no private data, private paths, checkpoints, cached features, W&B runs, or generated results are committed
+These checks cover repository structure, public configuration templates, and
+lightweight utilities. Full training and benchmark evaluation require their
+respective datasets and optional dependencies.
 
 ## Documentation
 
-- `docs/model_zoo.md`: model files and loading notes
-- `docs/model_card.md`: intended use and limitations
-- `docs/data_availability.md`: data-sharing statement
-- `docs/code_availability.md`: code availability statement
-- `docs/reproducibility.md`: reproduction command structure
-- `docs/downstream_task_guide.md`: downstream task release conventions
-- `docs/release_checklist.md`: remaining work before release
+- [Model zoo](docs/model_zoo.md)
+- [Model card](docs/model_card.md)
+- [Data availability](docs/data_availability.md)
+- [Code availability](docs/code_availability.md)
+- [Reproducibility guide](docs/reproducibility.md)
+- [Downstream task guide](docs/downstream_task_guide.md)
+- [Release checklist](docs/release_checklist.md)
+
+Release tags and an archival DOI will be added to the code-availability record
+when a formal release is created.
+
+## Citation
+
+If you use SmartX, please cite the associated manuscript. Machine-readable
+citation metadata and the complete author list are provided in
+[`CITATION.cff`](CITATION.cff).
+
+## License
+
+The code is released under the [MIT License](LICENSE). Third-party models and
+datasets remain subject to their respective licenses and terms of use.
