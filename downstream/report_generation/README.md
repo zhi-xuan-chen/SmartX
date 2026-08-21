@@ -111,5 +111,12 @@ licenses come from the respective upstream projects. For models that do not
 download weights automatically, pass the local vision checkpoint as the third
 argument to the corresponding `run_<dataset>_<model>.sh` script.
 
+## Acknowledgements
+
+This workflow builds on [LLaVA](https://github.com/haotian-liu/LLaVA) and
+[LLaVA-Rad](https://github.com/microsoft/LLaVA-Rad). We thank their authors
+for making their research and resources available. Use of upstream code,
+models and weights remains subject to their respective licences.
+
 Do not commit datasets, merged language models, checkpoints, predictions,
 metric caches, W&B runs or machine-specific paths.
