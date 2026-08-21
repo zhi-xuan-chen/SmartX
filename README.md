@@ -1,10 +1,7 @@
 # SmartX
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/smartx_icon.png">
-    <img src="docs/assets/smartx_icon.png" alt="SmartX" width="160">
-  </picture>
+  <img src="docs/assets/smartx_icon_white.png" alt="SmartX" width="190">
 </p>
 
 <p align="center">
