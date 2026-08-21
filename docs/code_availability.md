@@ -12,9 +12,9 @@ This repository contains the SmartX release code for model usage, TopK pretraini
 
 - TopK vision-language pretraining implementation in `pretrain/`.
 - Shared model wrappers in `downstream/modules/`.
-- Public entry points for linear probe, zero-shot classification, image--text retrieval, and detection in `downstream/`.
+- Entry points for linear probe, zero-shot classification, image--text retrieval, and detection in `downstream/`.
 - Included MIL linear-probe and LLaVA-Rad report-generation code in `downstream/`.
-- A reviewer-facing zero-shot and image--text retrieval notebook in `demo/`.
+- A runnable zero-shot and image--text retrieval notebook in `demo/`.
 
 ## Not Included
 

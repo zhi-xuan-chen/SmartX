@@ -9,7 +9,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/zhi-xuan-chen/SmartX/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/zhi-xuan-chen/SmartX/actions/workflows/tests.yml/badge.svg"></a>
   <img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white">
   <a href="https://github.com/zhi-xuan-chen/SmartX/blob/main/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
   <a href="https://huggingface.co/Trusure/SmartX"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Model_Weights-yellow"></a>
@@ -22,11 +21,11 @@
   <a href="#documentation">Documentation</a>
 </p>
 
-SmartX learns from case-level radiograph-report pairs across ten anatomical
-regions, matching the native structure of radiology archives without requiring
-curated image-level annotations. This repository provides model loading,
-pretraining, reviewer-facing demos, and public implementations of six downstream
-evaluation tasks.
+SmartX introduces a progressive global-to-local alignment strategy for learning
+directly from native case-level radiograph-report records across ten anatomical
+regions, without requiring curated image-level annotations. This repository
+provides model loading, pretraining, runnable demos, and implementations of six
+downstream evaluation tasks.
 
 ## Quick start
 

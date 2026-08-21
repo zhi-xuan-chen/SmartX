@@ -57,4 +57,4 @@ Expected before release:
 - No private paths or credentials.
 - No generated results, caches, W&B runs, or checkpoints in git.
 - No `TBD` in submission-facing metadata.
-- No `NotImplementedError` in reviewer-facing demos.
+- No `NotImplementedError` in demos.
