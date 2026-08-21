@@ -1,6 +1,6 @@
 # Demo
 
-This directory is for small reviewer-facing demos that run without full benchmark datasets.
+This directory contains small runnable demos that do not require full benchmark datasets.
 
 ## Notebook
 
