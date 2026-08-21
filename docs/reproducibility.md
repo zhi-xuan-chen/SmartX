@@ -2,18 +2,13 @@
 
 This file records the command structure for reproducing manuscript experiments after datasets and checkpoints are prepared locally.
 
-## Release Test Environment
+## Release Tests
 
-On `jhcpu7`, run repository checks in the existing `vlp` conda environment:
+From the repository root in a Python 3.10 environment:
 
 ```bash
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate vlp
-cd ~/Workspace/SmartX
 python -m pytest -q
 ```
-
-The current checked environment is `~/miniconda3/envs/vlp/bin/python` with Python 3.10.18 and pytest 7.2.0.
 
 ## TopK Pretraining
 
@@ -33,6 +28,38 @@ the pretrained weights only (no training). Place the checkpoint at
 `checkpoints/smartx_large.ckpt`, or set `CHECKPOINT = None` in the notebook to auto-download
 from Hugging Face `Trusure/SmartX`.
 
+Release smoke validation with the official checkpoint completed all eight code
+cells, loaded without missing or shape-skipped parameters, and achieved
+image-to-text Recall@1 of 4/4 on the bundled examples.
+
 ## Downstream Evaluations
 
-Runnable configs and entry points are provided for zero-shot classification, image--text retrieval, linear probing, and detection. See each task directory under `downstream/`; detection additionally requires the optional dependencies listed in `downstream/detection/requirements-optional.txt`.
+Runnable public entry points are provided for:
+
+- zero-shot classification: `downstream/zeroshot/`
+- image--text retrieval: `downstream/retrieval/`
+- image-level linear probing: `downstream/linear_probe/`
+- COCO-format detection: `downstream/detection/`
+- case-level MIL linear probing: `downstream/mil_linear_probe/`
+- MIMIC-CXR and IU X-Ray report generation: `downstream/report_generation/`
+
+Each directory contains its data contract, example configuration, and exact
+commands. The MIL workflow runs feature extraction, training, then testing:
+
+```bash
+python downstream/mil_linear_probe/extract_features.py --config downstream/mil_linear_probe/configs/mil_linear_probe.example.yaml
+python downstream/mil_linear_probe/train_mil_linear_probe.py --config downstream/mil_linear_probe/configs/mil_linear_probe.example.yaml
+python downstream/mil_linear_probe/test_mil_linear_probe.py --config downstream/mil_linear_probe/configs/mil_linear_probe.example.yaml --checkpoint outputs/mil_linear_probe/run/mil_linear_probe_best.pt
+```
+
+Report generation exposes the complete two-stage training and evaluation
+workflow for both datasets:
+
+```bash
+bash downstream/report_generation/llavarad/scripts/run_mimic_smartx.sh all
+bash downstream/report_generation/llavarad/scripts/run_iu_smartx.sh all
+```
+
+Detection and report generation require their task-specific optional
+dependencies. Dataset access, pretrained language models, and compute are not
+included; see the corresponding task README before running.

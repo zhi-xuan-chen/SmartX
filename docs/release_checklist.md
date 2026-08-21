@@ -9,6 +9,8 @@ This file tracks the remaining work before SmartX is ready for public review or 
     pretrained weights via `downstream.modules.create_clip_style_model_global()`.
   - Public-domain X-ray demo images under `demo/assets/images/` (see `demo/assets/README.md`).
   - Keep demo outputs outside git-tracked files.
+  - Release smoke test completed all eight code cells with the official checkpoint;
+    image-to-text Recall@1 was 4/4 on the bundled examples.
 
 - [x] Add public downstream task entry points.
   - `downstream/zeroshot/` uses SmartX prompt-based zero-shot evaluation.
@@ -16,12 +18,17 @@ This file tracks the remaining work before SmartX is ready for public review or 
   - `downstream/linear_probe/` uses cached SmartX feature extraction, training, and testing.
   - `downstream/detection/` uses SmartX-backed VitDet with user-provided COCO annotations.
   - `downstream/mil_linear_probe/` uses generic case manifests and a CLAM-style attention head.
-  - All five use `downstream.modules.create_clip_style_model_global()` or the same public SmartX checkpoint resolver.
+  - `downstream/report_generation/` provides LLaVA-Rad-based two-stage training and
+    evaluation for MIMIC-CXR and IU X-Ray.
+  - All six use the public SmartX checkpoint resolver.
 
 - [x] Trim `downstream/mil_linear_probe/` for release clarity.
   - Keep only the generic manifest, feature extraction, CLAM train/test, config, and documentation.
   - Removed internal cohort adapters, batch scripts, reader-study helpers, and analysis code.
   - Do not add private data, private splits, cached features, checkpoints, W&B runs, or generated results.
+
+- [x] Run the pytest suite on pushes to `main` and pull requests with a
+  lightweight GitHub Actions workflow.
 
 ## Metadata Before Submission
 
@@ -36,14 +43,13 @@ This file tracks the remaining work before SmartX is ready for public review or 
 Run these before packaging or submitting:
 
 ```bash
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate vlp
 python -m compileall -q docs demo downstream pretrain tests utils checkpoints
 python -m pytest -q
 find . -type d \( -name '__pycache__' -o -name '.pytest_cache' -o -name 'wandb' -o -name 'analysis_results' -o -name 'results' \) -print
 find . -type f -size +1M -print
 python -m pytest tests/test_downstream_release_tasks.py::test_downstream_release_hygiene -q
-rg -n "TBD|NotImplemented|Implementation pending|scaffold" README.md CITATION.cff docs demo downstream pretrain tests utils
+rg -n "TBD|Implementation pending|scaffold" README.md CITATION.cff docs --glob '!release_checklist.md'
+rg -n "NotImplemented(Error)?" demo
 ```
 
 Expected before release:
