@@ -81,6 +81,13 @@ def test_public_scripts_match_manuscript_protocol():
     assert "strict=True" in smartx_branch
 
 
+    metric_source = (
+        LLAVARAD_ROOT / "llava/eval/rrg_eval/run.py"
+    ).read_text()
+    assert "import evaluate" not in metric_source
+    assert '"BERTScore"' not in metric_source
+
+
 def test_public_shell_syntax_and_paths():
     scripts = sorted((LLAVARAD_ROOT / "scripts").glob("*.sh"))
     for script in scripts:

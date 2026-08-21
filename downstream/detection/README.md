@@ -11,12 +11,12 @@ The detector uses the SmartX Swin-L backbone. If `model.checkpoint` is empty, th
 
 ## Optional Dependencies
 
-Detection dependencies are intentionally not forced into the base install. Install them separately for this task:
+Detection dependencies are intentionally not forced into the base install. Install the helpers validated in the `vlp` environment, then install Detectron2 (which also provides `fvcore`) for your CUDA/PyTorch platform:
 
 ```bash
 pip install -r downstream/detection/requirements-optional.txt
 ```
 
-Detectron2 installation can be platform-specific; follow the official Detectron2 instructions if the package index wheel is not available for your CUDA/PyTorch combination.
+Follow the official Detectron2 installation instructions for a version compatible with your CUDA/PyTorch combination. Detectron2 is not pinned because it is not installed in the validated `vlp` environment.
 
 See [`docs/downstream_task_guide.md`](../../docs/downstream_task_guide.md) for the release conventions. Do not commit COCO annotations, dataset images, generated outputs, checkpoints, or machine-specific paths.

@@ -3,7 +3,6 @@ import os
 import json 
 import random
 
-import evaluate
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -39,36 +38,43 @@ def _corpus_bleu_ci(predictions, references, max_ngram_order: int):
     return percentile_ci(stat, len(predictions))
 
 
+def _corpus_bleu(predictions, references, max_ngram_order: int):
+    bleu = BLEU(max_ngram_order=max_ngram_order)
+    return bleu.corpus_score(predictions, [references]).score
+
+
 def bleu4(predictions, references, bootstrap_ci: bool = False):
     if bootstrap_ci:
         return _corpus_bleu_ci(predictions, references, max_ngram_order=4)
     else:
-        return evaluate.load("bleu").compute(predictions=predictions, references=references)["bleu"]
+        return _corpus_bleu(predictions, references, max_ngram_order=4)
 
 
 def bleu1(predictions, references, bootstrap_ci: bool = False):
     if bootstrap_ci:
         return _corpus_bleu_ci(predictions, references, max_ngram_order=1)
     else:
-        return evaluate.load("bleu").compute(predictions=predictions, references=references, max_order=1)["bleu"]
+        return _corpus_bleu(predictions, references, max_ngram_order=1)
 
 
 def rougel(predictions, references, bootstrap_ci: bool = False):
     if bootstrap_ci:
         return rrg_eval.rouge.compute(predictions, references, ["rougeL"])["rougeL"]
     else:
-        return evaluate.load("rouge").compute(predictions=predictions, references=references)["rougeL"]
+        scores = rrg_eval.rouge.compute(
+            predictions, references, ["rougeL"], use_aggregator=False
+        )["rougeL"]
+        return float(np.mean(scores))
 
 
 def rouge2(predictions, references, bootstrap_ci: bool = False):
     if bootstrap_ci:
         return rrg_eval.rouge.compute(predictions, references, ["rouge2"])["rouge2"]
     else:
-        return evaluate.load("rouge").compute(predictions=predictions, references=references)["rouge2"]
-
-
-def bertscore(predictions, references):
-    return evaluate.load("bertscore").compute(predictions=predictions, references=references)["f1"]
+        scores = rrg_eval.rouge.compute(
+            predictions, references, ["rouge2"], use_aggregator=False
+        )["rouge2"]
+        return float(np.mean(scores))
 
 
 def radgraph(predictions, references, bootstrap_ci: bool = False):
@@ -90,7 +96,6 @@ SCORER_NAME_TO_CLASS = {
     "ROUGE-2": rouge2,
     "BLEU-4": bleu4,
     "BLEU-1": bleu1,
-    "BERTScore": bertscore,
     "F1-RadGraph": radgraph,
     "CheXbert": chexbert,
 }

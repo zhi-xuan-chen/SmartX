@@ -35,3 +35,18 @@ def test_pretrain_config_reports_missing_environment(monkeypatch):
 
     with pytest.raises(ValueError, match="SMARTX_DATA_ROOT"):
         load_config(root / "pretrain/configs/topk_ark_base.example.yaml")
+
+
+def test_requirement_files_pin_validated_packages():
+    root = Path(__file__).resolve().parents[1]
+    for relative_path in [
+        "requirements.txt",
+        "downstream/detection/requirements-optional.txt",
+        "downstream/report_generation/requirements-optional.txt",
+    ]:
+        lines = (root / relative_path).read_text().splitlines()
+        requirements = [
+            line for line in lines if line.strip() and not line.startswith("#")
+        ]
+        assert requirements
+        assert all("==" in requirement for requirement in requirements)

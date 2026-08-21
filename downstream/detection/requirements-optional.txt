@@ -1,4 +1,4 @@
-detectron2
-fvcore
-omegaconf
-pycocotools
+# Versions present in the validated `vlp` environment. Install Detectron2
+# (and its fvcore dependency) separately as described in this task's README.
+omegaconf==2.3.0
+pycocotools==2.0.11
