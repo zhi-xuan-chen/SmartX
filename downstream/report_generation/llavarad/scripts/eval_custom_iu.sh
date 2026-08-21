@@ -87,7 +87,7 @@ pushd "${PROJECT_ROOT}/llava/eval/rrg_eval"
 WANDB_PROJECT="llava" \
 WANDB_RUN_ID="llava-eval-$(date +%Y%m%d%H%M%S)" \
 WANDB_RUN_GROUP=evaluate \
-CUDA_VISIBLE_DEVICES=0 \
+CUDA_VISIBLE_DEVICES="${GPU_IDS[0]}" \
     python run.py "${merged_preds}" \
     --run_name "${run_name}" \
     --output_dir "${prediction_dir}/eval"

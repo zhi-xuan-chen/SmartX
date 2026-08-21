@@ -140,7 +140,7 @@ class RetrievalImageDataset(Dataset):
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run public SmartX retrieval.")
+    parser = argparse.ArgumentParser(description="Run SmartX retrieval.")
     parser.add_argument("--config", default="downstream/retrieval/configs/retrieval.example.yaml")
     parser.add_argument("--checkpoint", default=None)
     parser.add_argument("--output-dir", default=None)

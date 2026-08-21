@@ -12,4 +12,4 @@ The private clinical cohort is not redistributed because it contains sensitive c
 
 ## Demo Assets
 
-Demo assets under `demo/assets/` must be public-domain, openly licensed, or synthetic/de-identified examples. Add source and licence details in `demo/assets/README.md` before public release.
+Demo assets under `demo/assets/` are public-domain, openly licensed, or synthetic examples. Their sources, licences and preprocessing are recorded in `demo/assets/README.md`.

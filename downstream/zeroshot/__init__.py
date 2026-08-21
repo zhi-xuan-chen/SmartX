@@ -1,1 +1,1 @@
-"""Public SmartX zero-shot evaluation utilities."""
+"""SmartX zero-shot evaluation utilities."""

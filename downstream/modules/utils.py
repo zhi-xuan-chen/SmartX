@@ -1,4 +1,4 @@
-"""Public SmartX model loading helpers."""
+"""SmartX model loading helpers."""
 
 from __future__ import annotations
 
@@ -105,7 +105,7 @@ def create_smartx_vlp_model(
     output_dim: int = 512,
     map_location="cpu",
 ):
-    """Create the SmartX large VLP model and load the public HF checkpoint."""
+    """Create the SmartX large VLP model and load the official Hugging Face checkpoint."""
     from timm.models.swin_transformer import SwinTransformer
 
     from pretrain.modules.ours_topk import XRayTopKVLP

@@ -1,6 +1,8 @@
 from datetime import datetime
 import json
+import os
 from pathlib import Path
+import re
 import shutil
 import sys
 
@@ -229,6 +231,33 @@ def save_wandb_run_id(experiment_dir, wandb_run_id):
             print_rank_zero(f"Warning: Could not save W&B run ID: {e}")
 
 
+_ENV_PATTERN = re.compile(
+    r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-([^}]*))?\}"
+)
+
+
+def _expand_config_env(value):
+    if isinstance(value, str):
+
+        def replace(match):
+            name, default = match.groups()
+            configured = os.environ.get(name)
+            if configured:
+                return configured
+            if default is not None:
+                return default
+            raise ValueError(
+                f"Environment variable {name} is required by the config"
+            )
+
+        return os.path.expanduser(_ENV_PATTERN.sub(replace, value))
+    if isinstance(value, list):
+        return [_expand_config_env(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _expand_config_env(item) for key, item in value.items()}
+    return value
+
+
 def load_config(config_path):
     """Load configuration from YAML or JSON file."""
     config_path = Path(config_path)
@@ -241,6 +270,7 @@ def load_config(config_path):
         else:
             raise ValueError(f"Unsupported config file format: {config_path.suffix}")
 
+    config = _expand_config_env(config)
     # Ensure numeric values are properly typed
     numeric_keys = [
         "lr",

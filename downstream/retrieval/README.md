@@ -1,6 +1,6 @@
 # Image-Text Retrieval
 
-This folder provides public SmartX image-text retrieval adapted from the evaluation repository. It keeps the upstream square-similarity ranking metrics and replaces private dataset defaults with a generic case manifest.
+This folder provides SmartX image-text retrieval adapted from the evaluation repository. It keeps the upstream square-similarity ranking metrics and replaces private dataset defaults with a generic case manifest.
 
 ```bash
 python downstream/retrieval/run_retrieval.py --config downstream/retrieval/configs/retrieval.example.yaml

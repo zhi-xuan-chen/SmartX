@@ -1,4 +1,4 @@
-"""Validation-thresholded metrics for public MIL evaluation."""
+"""Validation-thresholded metrics for MIL evaluation."""
 
 from __future__ import annotations
 

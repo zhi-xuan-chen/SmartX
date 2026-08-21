@@ -1,6 +1,6 @@
 # Linear Probe
 
-This folder provides the public SmartX linear-probe workflow adapted from the evaluation repository. It uses [`downstream.modules.create_clip_style_model_global()`](../modules/README.md) for checkpoint loading and keeps dataset paths in user config files.
+This folder provides the SmartX linear-probe workflow adapted from the evaluation repository. It uses [`downstream.modules.create_clip_style_model_global()`](../modules/README.md) for checkpoint loading and keeps dataset paths in user config files.
 
 ## Entry Points
 

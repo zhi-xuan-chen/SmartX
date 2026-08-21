@@ -1,6 +1,6 @@
 # Report generation
 
-This folder contains the public SmartX report-generation workflow used for the
+This folder contains the SmartX report-generation workflow used for the
 MIMIC-CXR and IU X-Ray experiments. It adapts LLaVA-Rad with a frozen SmartX
 vision encoder and a Vicuna 7B language backbone.
 
@@ -24,7 +24,7 @@ Set the data root before running any command:
 export SMARTX_DATA_ROOT=/path/to/report-generation-data
 ```
 
-The public scripts expect this layout:
+The scripts expect this layout:
 
 ```text
 ${SMARTX_DATA_ROOT}/
@@ -72,7 +72,7 @@ export SMARTX_CHECKPOINT=/path/to/smartx_large.ckpt
 
 ## Run SmartX
 
-Each public entry point accepts `stage1`, `stage2`, `eval` or `all`:
+Each entry point accepts `stage1`, `stage2`, `eval` or `all`:
 
 ```bash
 bash downstream/report_generation/llavarad/scripts/run_mimic_smartx.sh all

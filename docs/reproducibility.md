@@ -34,7 +34,7 @@ image-to-text Recall@1 of 4/4 on the bundled examples.
 
 ## Downstream Evaluations
 
-Runnable public entry points are provided for:
+Runnable entry points are provided for:
 
 - zero-shot classification: `downstream/zeroshot/`
 - image--text retrieval: `downstream/retrieval/`

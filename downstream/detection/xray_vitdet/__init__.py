@@ -1,1 +1,1 @@
-"""Minimal VitDet helpers for public SmartX detection."""
+"""Minimal VitDet helpers for SmartX detection."""

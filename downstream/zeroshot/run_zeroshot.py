@@ -31,7 +31,7 @@ from downstream.zeroshot.metrics import compute_classification_metrics
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run public SmartX zero-shot evaluation.")
+    parser = argparse.ArgumentParser(description="Run SmartX zero-shot evaluation.")
     parser.add_argument("--config", default="downstream/zeroshot/configs/zeroshot.example.yaml")
     parser.add_argument("--checkpoint", default=None)
     parser.add_argument("--output-dir", default=None)

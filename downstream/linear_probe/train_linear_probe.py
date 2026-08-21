@@ -27,7 +27,7 @@ from downstream.linear_probe.model import LinearProbe
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train a public SmartX linear probe.")
+    parser = argparse.ArgumentParser(description="Train a SmartX linear probe.")
     parser.add_argument("--config", default="downstream/linear_probe/configs/linear_probe.example.yaml")
     parser.add_argument("--features-dir", default=None)
     parser.add_argument("--output-dir", default=None)

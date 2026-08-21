@@ -1,6 +1,6 @@
 # Downstream Task Guide
 
-This guide defines the public release conventions for the downstream tasks:
+This guide defines the release conventions for the downstream tasks:
 
 - `downstream/zeroshot/`
 - `downstream/retrieval/`
@@ -55,7 +55,7 @@ Do not commit:
 
 ### Zero-Shot
 
-Add:
+Components:
 
 - `run_zeroshot.py`: load SmartX, encode prompts, encode images, compute class scores.
 - `configs/zeroshot.example.yaml`: demo image folder, label file, prompts, checkpoint/output settings.
@@ -65,7 +65,7 @@ Smoke check: run on `demo/assets/images` and `demo/assets/zero_shot_labels.json`
 
 ### Retrieval
 
-Add:
+Components:
 
 - `run_retrieval.py`: encode images and texts, compute similarity matrix, write rankings.
 - `configs/retrieval.example.yaml`: image/text pair file, top-k values, checkpoint/output settings.
@@ -75,7 +75,7 @@ Smoke check: run on `demo/assets/retrieval_pairs.jsonl`.
 
 ### Linear Probe
 
-Add:
+Components:
 
 - `extract_features.py`: export SmartX image embeddings.
 - `train_linear_probe.py`: train a simple linear classifier on cached features.
@@ -86,7 +86,7 @@ Smoke check: train for one epoch on tiny synthetic/demo features committed as sm
 
 ### Case-level MIL Linear Probe
 
-Add:
+Components:
 
 - `extract_features.py`: export padded case-level SmartX embeddings and view masks.
 - `train_mil_linear_probe.py`: train the manuscript CLAM-style attention head.
@@ -99,7 +99,7 @@ of the release repository.
 
 ### Detection
 
-Add:
+Components:
 
 - `run_detection.py` or `train_detection.py`: use SmartX features/backbone with the chosen detection head.
 - `configs/detection.example.yaml`: dataset annotation schema, image root, checkpoint/output settings.
@@ -111,14 +111,14 @@ Smoke check: parse a tiny public/demo annotation file and run one forward/eval p
 
 Keep the adapted LLaVA-Rad framework, two SmartX entry points for MIMIC-CXR
 and IU X-Ray, and only the baseline wrappers used by the manuscript. Resolve
-the SmartX checkpoint through the shared public loader. Training must keep W&B
+the SmartX checkpoint through the shared loader. Training must keep W&B
 optional; evaluation must use an explicitly selected checkpoint rather than
 selecting one on test metrics.
 
-Smoke check: validate both public CSV loaders, shell syntax, manuscript
+Smoke check: validate both CSV loaders, shell syntax, manuscript
 hyperparameters and SmartX encoder loading. Full Vicuna 7B training is not a
 CI requirement.
 
 ## Tests
 
-Add one lightweight test per task under `tests/` after implementation. Prefer import/config/metric smoke checks. Do not add GPU or full-dataset tests to the release test suite.
+Keep at least one lightweight test per task under `tests/`. Prefer import/config/metric smoke checks. Do not add GPU or full-dataset tests to the release test suite.

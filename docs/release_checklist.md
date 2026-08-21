@@ -12,7 +12,7 @@ This file tracks the remaining work before SmartX is ready for public review or 
   - Release smoke test completed all eight code cells with the official checkpoint;
     image-to-text Recall@1 was 4/4 on the bundled examples.
 
-- [x] Add public downstream task entry points.
+- [x] Add downstream task entry points.
   - `downstream/zeroshot/` uses SmartX prompt-based zero-shot evaluation.
   - `downstream/retrieval/` uses generic image-text case manifests and Recall@K metrics.
   - `downstream/linear_probe/` uses cached SmartX feature extraction, training, and testing.
@@ -20,7 +20,7 @@ This file tracks the remaining work before SmartX is ready for public review or 
   - `downstream/mil_linear_probe/` uses generic case manifests and a CLAM-style attention head.
   - `downstream/report_generation/` provides LLaVA-Rad-based two-stage training and
     evaluation for MIMIC-CXR and IU X-Ray.
-  - All six use the public SmartX checkpoint resolver.
+  - All six use the SmartX checkpoint resolver.
 
 - [x] Trim `downstream/mil_linear_probe/` for release clarity.
   - Keep only the generic manifest, feature extraction, CLAM train/test, config, and documentation.

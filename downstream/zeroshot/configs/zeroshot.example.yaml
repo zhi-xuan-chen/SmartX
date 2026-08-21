@@ -5,7 +5,7 @@ model:
   filename: smartx_large.ckpt
 
 dataset:
-  name: public_xray_example
+  name: xray_example
   split: test
   task_type: multi-label
   class_names:
@@ -27,7 +27,7 @@ prompts:
     - "The radiograph shows no evidence of {class_name}."
 
 evaluation:
-  output_dir: outputs/zeroshot/public_xray_example
+  output_dir: outputs/zeroshot/xray_example
   image_size: 768
   in_channels: 3
   batch_size: 16

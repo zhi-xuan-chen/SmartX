@@ -1,4 +1,4 @@
-"""Shared public SmartX loading helpers."""
+"""Shared SmartX loading helpers."""
 
 from .utils import (
     SMARTX_HF_REPO,

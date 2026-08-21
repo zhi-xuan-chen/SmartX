@@ -1,1 +1,1 @@
-"""Public SmartX detection utilities."""
+"""SmartX detection utilities."""

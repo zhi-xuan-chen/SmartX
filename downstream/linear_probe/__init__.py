@@ -1,1 +1,1 @@
-"""Public SmartX linear-probe utilities."""
+"""SmartX linear-probe utilities."""

@@ -1,12 +1,12 @@
 # Case-level MIL linear probe
 
-This folder provides the public SmartX multi-instance learning workflow for
+This folder provides the SmartX multi-instance learning workflow for
 case-level abnormality classification. The SmartX vision encoder is frozen;
 a lightweight class-specific gated attention head pools every radiographic
 view of a case into one prediction per finding.
 
 Checkpoint loading uses the shared
-`downstream.modules.create_clip_style_model_global()` public loader.
+`downstream.modules.create_clip_style_model_global()` shared loader.
 
 ## Data format
 

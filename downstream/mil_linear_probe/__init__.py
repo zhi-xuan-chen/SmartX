@@ -1,1 +1,1 @@
-"""Public case-level MIL evaluation for frozen SmartX features."""
+"""Case-level MIL evaluation for frozen SmartX features."""

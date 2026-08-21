@@ -1,1 +1,1 @@
-"""Public SmartX image-text retrieval utilities."""
+"""SmartX image-text retrieval utilities."""

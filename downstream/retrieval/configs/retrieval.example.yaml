@@ -5,7 +5,7 @@ model:
   filename: smartx_large.ckpt
 
 dataset:
-  name: public_xray_retrieval
+  name: xray_retrieval
   split: test
   manifest: ${SMARTX_DATA_ROOT}/retrieval/cases.jsonl
   image_root: ${SMARTX_DATA_ROOT}/images

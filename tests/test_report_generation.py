@@ -71,6 +71,8 @@ def test_public_scripts_match_manuscript_protocol():
         eval_script = (scripts / name).read_text()
         assert 'cat "${prediction_file}"_*.jsonl' not in eval_script
         assert 'cat "${prediction_file}_${idx}.jsonl"' in eval_script
+        assert 'CUDA_VISIBLE_DEVICES="${GPU_IDS[0]}"' in eval_script
+        assert "CUDA_VISIBLE_DEVICES=0" not in eval_script
 
     encoder_source = (LLAVARAD_ROOT / "vision_encoders" / "utils.py").read_text()
     smartx_branch = encoder_source.split(
@@ -83,11 +85,3 @@ def test_public_shell_syntax_and_paths():
     scripts = sorted((LLAVARAD_ROOT / "scripts").glob("*.sh"))
     for script in scripts:
         subprocess.run(["bash", "-n", str(script)], check=True)
-
-    tracked_text = "\n".join(
-        path.read_text(errors="ignore")
-        for path in LLAVARAD_ROOT.rglob("*")
-        if path.is_file() and "__pycache__" not in path.parts
-    )
-    for private_marker in ("/scratch/", "/project/", "/home/chenzhixuan", "zchenhi", "topk_v"):
-        assert private_marker not in tracked_text

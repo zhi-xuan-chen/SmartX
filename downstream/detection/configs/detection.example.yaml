@@ -1,5 +1,5 @@
 dataset:
-  name: public_xray_detection
+  name: xray_detection
   num_classes: 1
   class_names:
     - finding
@@ -28,7 +28,7 @@ model:
   lazy_config: downstream/detection/configs/vitdet_xray_base.py
 
 training:
-  output_dir: outputs/detection/public_xray_detection
+  output_dir: outputs/detection/xray_detection
   batch_size: 2
   max_iter: 10000
   eval_period: 1000

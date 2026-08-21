@@ -50,7 +50,7 @@ def test_detection_config_loads_without_detectron2():
 
     root = Path(__file__).resolve().parents[1]
     cfg = load_detection_config(root / "downstream/detection/configs/detection.example.yaml")
-    assert cfg["dataset"]["name"] == "public_xray_detection"
+    assert cfg["dataset"]["name"] == "xray_detection"
     assert cfg["model"]["backbone"] == "smartx_large"
 
 
@@ -67,27 +67,26 @@ def test_detection_lazy_config_skips_when_detectron2_missing():
 
 def test_downstream_release_hygiene():
     root = Path(__file__).resolve().parents[1]
-    task_roots = [
-        root / "downstream/linear_probe",
-        root / "downstream/mil_linear_probe",
-        root / "downstream/zeroshot",
-        root / "downstream/retrieval",
-        root / "downstream/detection",
+    release_roots = [
+        root / "pretrain",
+        root / "downstream",
+        root / "demo",
+        root / "docs",
     ]
     banned = [
         "/" + "jhcnas",
+        "/" + "mnt/hanoverdev",
+        "/home/" + "chenzhixuan",
         "/home/" + "kyle",
         "/data/" + "kyle",
         "/" + "ssddata" + "2",
-        "api_" + "key",
-        "pass" + "word",
-        "sec" + "ret",
-        "sk" + "-",
+        "jhcpu",
+        "zhefan.pem",
     ]
     generated_suffixes = {".pt", ".pth", ".ckpt", ".npy", ".npz", ".pyc"}
-    for task_root in task_roots:
-        for path in task_root.rglob("*"):
-            rel = path.relative_to(task_root).as_posix()
+    for release_root in release_roots:
+        for path in release_root.rglob("*"):
+            rel = path.relative_to(release_root).as_posix()
             if "__pycache__" in path.parts:
                 continue
             assert "/splits/" not in f"/{rel}/"

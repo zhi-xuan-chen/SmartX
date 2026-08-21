@@ -88,7 +88,7 @@ Place the checkpoint at `checkpoints/smartx_large.ckpt`, or set
 
 ## Downstream tasks
 
-| Task | Public implementation |
+| Task | Implementation |
 | --- | --- |
 | Zero-shot classification | [Prompt-based evaluation](downstream/zeroshot/README.md) |
 | Image-text retrieval | [Embedding extraction and retrieval metrics](downstream/retrieval/README.md) |
@@ -121,7 +121,7 @@ Run the lightweight release checks:
 python -m pytest -q
 ```
 
-These checks cover repository structure, public configuration templates, and
+These checks cover repository structure, configuration templates, and
 lightweight utilities. Full training and benchmark evaluation require their
 respective datasets and optional dependencies.
 

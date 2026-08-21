@@ -1,6 +1,6 @@
 """Zero-shot metric helpers.
 
-The metric implementation is shared with the public linear-probe task so label
+The metric implementation is shared with the linear-probe task so label
 handling stays consistent across downstream classification evaluations.
 """
 

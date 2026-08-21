@@ -29,7 +29,7 @@ from downstream.mil_linear_probe.model import CLAMLinearProbe
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train a public SmartX MIL probe.")
+    parser = argparse.ArgumentParser(description="Train a SmartX MIL probe.")
     parser.add_argument(
         "--config",
         default="downstream/mil_linear_probe/configs/mil_linear_probe.example.yaml",

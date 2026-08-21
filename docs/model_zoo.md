@@ -15,4 +15,4 @@ checkpoints/
 
 ## Loading
 
-Use `downstream.modules.create_clip_style_model_global()` or `downstream.modules.create_smartx_vlp_model()` to load the public checkpoint from Hugging Face or a local `checkpoints/smartx_large.ckpt` file.
+Use `downstream.modules.create_clip_style_model_global()` or `downstream.modules.create_smartx_vlp_model()` to load the official checkpoint from Hugging Face or a local `checkpoints/smartx_large.ckpt` file.

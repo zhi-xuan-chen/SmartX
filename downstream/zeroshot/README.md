@@ -1,6 +1,6 @@
 # Zero-Shot Classification
 
-This folder provides public SmartX zero-shot classification adapted from the evaluation repository. It uses positive and negative text prompts per class, encodes images and prompts with [`downstream.modules.create_clip_style_model_global()`](../modules/README.md), and writes metrics plus per-sample scores to a user-selected output directory.
+This folder provides SmartX zero-shot classification adapted from the evaluation repository. It uses positive and negative text prompts per class, encodes images and prompts with [`downstream.modules.create_clip_style_model_global()`](../modules/README.md), and writes metrics plus per-sample scores to a user-selected output directory.
 
 ```bash
 python downstream/zeroshot/run_zeroshot.py --config downstream/zeroshot/configs/zeroshot.example.yaml

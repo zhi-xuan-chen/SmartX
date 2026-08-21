@@ -65,7 +65,7 @@ def _smartx_vision_state_dict(checkpoint_path: str | Path) -> dict[str, torch.Te
 
 
 class SmartXSwinBackbone(Backbone):
-    """Swin-L encoder initialized from the public SmartX checkpoint."""
+    """Swin-L encoder initialized from the SmartX checkpoint."""
 
     def __init__(
         self,

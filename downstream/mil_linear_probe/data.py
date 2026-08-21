@@ -1,4 +1,4 @@
-"""Manifest and cached-feature helpers for public case-level MIL."""
+"""Manifest and cached-feature helpers for case-level MIL."""
 
 from __future__ import annotations
 
