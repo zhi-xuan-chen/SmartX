@@ -264,7 +264,7 @@ def create_vision_encoder(cfg):
             for k, v in state_dict.items()
             if ("vision_encoder" in k)
         }
-        missing, unexpected = encoder.load_state_dict(state_dict, strict=False)
+        missing, unexpected = encoder.load_state_dict(state_dict, strict=True)
 
     # ResNet50
     elif model_name.lower() == "chess":

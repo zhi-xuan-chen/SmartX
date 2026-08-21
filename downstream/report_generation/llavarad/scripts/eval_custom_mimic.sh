@@ -77,7 +77,10 @@ done
 [ $fail -eq 0 ] || exit 1
 
 merged_preds="${prediction_dir}/predictions.jsonl"
-cat "${prediction_file}"_*.jsonl > "${merged_preds}"
+: > "${merged_preds}"
+for (( idx=0; idx<CHUNKS; idx++ )); do
+    cat "${prediction_file}_${idx}.jsonl" >> "${merged_preds}"
+done
 
 export WANDB_MODE="${WANDB_MODE:-disabled}"
 pushd "${PROJECT_ROOT}/llava/eval/rrg_eval"

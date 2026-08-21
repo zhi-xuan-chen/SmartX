@@ -64,6 +64,20 @@ def test_public_scripts_match_manuscript_protocol():
         assert value in evaluation
     assert "eval_all_checkpoints" not in (scripts / "run_mimic_smartx.sh").read_text()
 
+    merge = (scripts / "merge_llavarad.sh").read_text()
+    assert 'export PYTHONPATH="${PROJECT_ROOT}:${PYTHONPATH:-}"' in merge
+
+    for name in ("eval_custom_mimic.sh", "eval_custom_iu.sh"):
+        eval_script = (scripts / name).read_text()
+        assert 'cat "${prediction_file}"_*.jsonl' not in eval_script
+        assert 'cat "${prediction_file}_${idx}.jsonl"' in eval_script
+
+    encoder_source = (LLAVARAD_ROOT / "vision_encoders" / "utils.py").read_text()
+    smartx_branch = encoder_source.split(
+        'elif model_name.lower() in {"our_ark_large", "smartx_large"}:', 1
+    )[1].split("# ResNet50", 1)[0]
+    assert "strict=True" in smartx_branch
+
 
 def test_public_shell_syntax_and_paths():
     scripts = sorted((LLAVARAD_ROOT / "scripts").glob("*.sh"))

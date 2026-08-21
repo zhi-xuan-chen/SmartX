@@ -6,6 +6,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+export PYTHONPATH="${PROJECT_ROOT}:${PYTHONPATH:-}"
 SMARTX_OUTPUT_ROOT="${SMARTX_OUTPUT_ROOT:-${REPO_ROOT}/outputs/report_generation}"
 
 model_base="${1:-lmsys/vicuna-7b-v1.5}"
