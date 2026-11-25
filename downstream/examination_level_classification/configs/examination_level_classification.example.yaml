@@ -1,0 +1,56 @@
+model:
+  name: smartx_large
+  checkpoint: ${SMARTX_CHECKPOINT}
+  repo_id: Trusure/SmartX
+  filename: smartx_large.ckpt
+
+dataset:
+  name: xray_mil_example
+  task_type: multi-label
+  num_classes: 3
+  class_names:
+    - normal
+    - pneumonia
+    - fracture
+  image_root: ${SMARTX_DATA_ROOT}/images
+  manifests:
+    train: ${SMARTX_DATA_ROOT}/mil/train.csv
+    valid: ${SMARTX_DATA_ROOT}/mil/valid.csv
+    test: ${SMARTX_DATA_ROOT}/mil/test.csv
+  image_column: image_paths
+  label_column: labels
+  max_views: 6
+  verify_images: false
+
+feature_extraction:
+  output_dir: outputs/examination_level_classification/features/smartx_large
+  image_size: 768
+  in_channels: 3
+  batch_size: 4
+  num_workers: 4
+  splits: [train, valid, test]
+
+features:
+  dir: outputs/examination_level_classification/features/smartx_large
+
+mil_model:
+  hidden_dim: 512
+  attention_dim: 384
+  dropout: 0.25
+  gated: true
+
+training:
+  output_dir: outputs/examination_level_classification/run
+  batch_size: 4096
+  max_epochs: 50
+  lr: 0.001
+  weight_decay: 0.0001
+  warmup_epochs: 5
+  gradient_clip_val: 1.0
+  seed: 42
+
+evaluation:
+  output_dir: outputs/examination_level_classification/eval
+  split: test
+  batch_size: 64
+  write_attention: true

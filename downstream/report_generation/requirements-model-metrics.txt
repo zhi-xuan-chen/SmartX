@@ -1,0 +1,4 @@
+# Install in a SEPARATE Python 3.10 environment, not the SmartX training env.
+# GREEN's dependency constraints conflict with the training requirements.
+bert-score==0.3.13
+green-score @ git+https://github.com/Stanford-AIMI/GREEN.git@29567040fba813e1d62503954ec234e056807d05

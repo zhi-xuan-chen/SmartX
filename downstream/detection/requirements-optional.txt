@@ -1,0 +1,4 @@
+# Install after the repository-level requirements. Install the validated
+# Detectron2 source revision separately as described in this task's README.
+omegaconf==2.3.0
+pycocotools==2.0.11

@@ -1,0 +1,13 @@
+# Versions validated for the SmartX report-generation workflow.
+accelerate==1.9.0
+deepspeed==0.17.1
+fire==0.7.1
+jaxtyping==0.3.4
+open-clip-torch==2.23.0
+packaging==25.0
+peft==0.17.1
+radgraph==0.1.18
+requests==2.32.4
+rouge-score==0.1.2
+sacrebleu==2.6.0
+sentencepiece==0.2.0

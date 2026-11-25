@@ -1,0 +1,15 @@
+{
+  "positive_templates": [
+    "This X-ray demonstrates {class_name}.",
+    "The radiograph shows evidence of {class_name}."
+  ],
+  "negative_templates": [
+    "This X-ray does not show {class_name}.",
+    "The radiograph shows no evidence of {class_name}."
+  ],
+  "labels": [
+    {"name": "normal"},
+    {"name": "pneumonia"},
+    {"name": "pleural effusion"}
+  ]
+}

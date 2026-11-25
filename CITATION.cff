@@ -1,0 +1,87 @@
+cff-version: 1.2.0
+title: "SmartX: an open vision–language foundation model for real-world multi-anatomy X-ray interpretation"
+message: If you use this software, please cite the associated manuscript.
+type: software
+authors:
+  - family-names: Chen
+    given-names: Zhixuan
+  - family-names: Huang
+    given-names: Weihong
+  - family-names: Son
+    given-names: Moo Hyun
+  - family-names: He
+    given-names: Sunan
+  - family-names: Bie
+    given-names: Yequan
+  - family-names: Jin
+    given-names: Haibo
+  - family-names: Hou
+    given-names: Junlin
+  - family-names: Wu
+    given-names: Linshan
+  - family-names: Wang
+    given-names: Yihui
+  - family-names: Nie
+    given-names: Yuxiang
+  - family-names: Yang
+    given-names: Shu
+  - family-names: Qiu
+    given-names: Zelin
+  - family-names: Li
+    given-names: Bin
+  - family-names: Chen
+    given-names: Linglong
+  - family-names: Ye
+    given-names: Qiang
+  - family-names: Zhang
+    given-names: Rui
+  - family-names: Liang
+    given-names: Xiao
+  - family-names: Zhu
+    given-names: Yanyan
+  - family-names: Bi
+    given-names: Zheng
+  - family-names: Zhang
+    given-names: Zhiruo
+  - family-names: Chen
+    given-names: Haimei
+  - family-names: Yang
+    given-names: Kanrong
+  - family-names: Cheng
+    given-names: Nianlan
+  - family-names: Tang
+    given-names: Wenjian
+  - family-names: Pei
+    given-names: Yixiu
+  - family-names: Zhang
+    given-names: Chenlei
+  - family-names: Lei
+    given-names: Chun
+  - family-names: Yu
+    given-names: Fang
+  - family-names: Zhou
+    given-names: Feifei
+  - family-names: Guan
+    given-names: Huafang
+  - family-names: Ouyang
+    given-names: Jianlong
+  - family-names: Xu
+    given-names: Jie
+  - family-names: He
+    given-names: Ting
+  - family-names: Wu
+    given-names: Yinsheng
+  - family-names: Chiu
+    given-names: Keith Wan-Hang
+  - family-names: Mahboobani
+    given-names: Neeraj Ramesh
+  - family-names: Vardhanabhuti
+    given-names: Varut
+  - family-names: Wu
+    given-names: Lin
+  - family-names: Zhao
+    given-names: Yinghua
+  - family-names: Chen
+    given-names: Hao
+version: 0.1.0
+repository-code: https://github.com/zhi-xuan-chen/SmartX

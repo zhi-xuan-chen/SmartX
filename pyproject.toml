@@ -1,0 +1,8 @@
+[project]
+name = "smartx"
+version = "0.1.0"
+description = "Release code for SmartX X-ray vision-language pretraining and evaluation."
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 88
